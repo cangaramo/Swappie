@@ -9,6 +9,7 @@
 import Foundation
 
 class UsuarioProductos: NSObject {
-    var usuario: Usuario?
-    var productos: String?
+    var usuario: String?
+    var productos: [String] = []
+    var productosreal: [Producto] = []
 }

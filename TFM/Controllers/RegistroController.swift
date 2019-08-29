@@ -12,7 +12,6 @@ import Firebase
 
 class RegistroController: ViewController{
     
-    
     @IBOutlet var nombreTextField:UITextField?
     @IBOutlet var contrasenaTextField:UITextField?
     @IBOutlet var emailTextField:UITextField?
@@ -23,18 +22,17 @@ class RegistroController: ViewController{
     }
     
     @objc func registrarUsuario(){
-        print ("registrar usuario")
         
         //Get text fields
         guard let email = emailTextField!.text,
-            let password = contrasenaTextField!.text,
-            let name = nombreTextField!.text else {
+            let contrasena = contrasenaTextField!.text,
+            let nombre = nombreTextField!.text else {
                 print("Form is not valid")
                 return
         }
         
         //Crear usuario
-        Auth.auth().createUser(withEmail: email, password: password, completion: { (res, error) in
+        Auth.auth().createUser(withEmail: email, password: contrasena, completion: { (res, error) in
             
             if let error = error {
                 print(error)
@@ -43,39 +41,26 @@ class RegistroController: ViewController{
             guard let uid = res?.user.uid else {
                 return
             }
-            
-            let values = ["name": name, "email": email]
+            let values = ["nombre": nombre, "email": email]
             
             //successfully authenticated user
             let ref = Database.database().reference()
-            let usersReference = ref.child("users").child(uid)
+            let usersReference = ref.child("usuarios").child(uid)
             
             usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
                 if let err = err {
                     print(err)
                     return
                 }
-                //let user = User(dictionary: values)
-                //self.messagesController?.setupNavBarWithUser(user)
-                //self.messagesController?.fetchUserAndSetupNavBarTitle()
-                //self.messagesController?.navigationItem.title = values["name"] as? String
-                //self.dismiss(animated: true, completion: nil)
-            
-                /*
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let productosController = storyboard.instantiateViewController(withIdentifier :"productosController") as! ProductosController
                 
-                self.present(productosController, animated: true, completion: nil) */
-                
+                //Mostrar menu
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 if let tabMenu = (storyboard.instantiateViewController(withIdentifier: "tabMenu") as? UITabBarController) {
                     self.present(tabMenu, animated: true, completion: nil)
                 }
                 
-                
             })
         
-            
         })
     }
     

@@ -7,3 +7,27 @@
 //
 
 import Foundation
+import UIKit
+import Firebase
+
+class ProductoCell: UICollectionViewCell {
+    
+    @IBOutlet var marcaLabel:UILabel?
+    @IBOutlet var tallaLabel:UILabel?
+    @IBOutlet var imageView: UIImageView?
+    @IBOutlet var borrarButton: UIButton?
+    
+    @IBOutlet var containerView: UIView?
+    
+    var producto:Producto? {
+        
+        didSet{
+            
+            self.marcaLabel!.text = producto!.marca
+            self.tallaLabel!.text = "Talla " + producto!.talla!
+            self.imageView?.loadImageUsingCacheWithUrlString(producto!.imagen1!)
+        }
+    }
+    
+}
+

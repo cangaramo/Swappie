@@ -36,33 +36,70 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
         String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier:
-            "intercambioHeader", for: indexPath) as! IntercambioHeder
+            "intercambioHeader", for: indexPath) as! IntercambioUsuarioHeder
+        
+        if (collectionView == self.collectionView) {
+           header.usuario_id = self.usuario_other
+            let anyadirProductoButton = header.anyadirProductoButton
+            anyadirProductoButton!.addTarget(self, action: #selector(self.anyadir), for: .touchUpInside)
+        }
+        else {
+            header.usuario_id = self.usuario_self
+        }
         
         return header
     }
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return productos1.count
+        
+        if (collectionView == self.collectionView) {
+            return productos_other.count
+        }
+        else {
+            return productos_self.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let producto = productos1[indexPath.item]
+        if (collectionView == self.collectionView) {
+            let producto = productos_other[indexPath.item]
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId3", for: indexPath) as! ProductoCell
+            cell.producto = producto
+            return cell
+        }
+            
+        else {
+            let producto = productos_self[indexPath.item]
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId4", for: indexPath) as! ProductoCell
+            cell.producto = producto
+            
+            let borrarButton = cell.borrarButton
+            borrarButton!.tag = indexPath.row
+            borrarButton!.addTarget(self, action: #selector(borrarProducto), for: .touchUpInside)
+            
+            return cell
+        }
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId3", for: indexPath) as! ProductoCell
-        
-        cell.producto = producto
-        
-        return cell
     }
     
-
+    
     @objc func handleReloadTable () {
         DispatchQueue.main.async(execute: {
             self.collectionView!.reloadData()
         })
     }
+    
+    @objc func handleReloadTable2 () {
+        DispatchQueue.main.async(execute: {
+            self.collectionView2!.reloadData()
+        })
+    }
+    
+   
+    
+    
     
     
 }
