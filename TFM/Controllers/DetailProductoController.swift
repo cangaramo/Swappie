@@ -23,6 +23,7 @@ class DetailProductoController: UIViewController {
     @IBOutlet var usuarioLabel: UILabel!
     @IBOutlet var avatarImageView: UIImageView!
     @IBOutlet var descripcionLabel: UILabel!
+    @IBOutlet var intercambiarButton: UIButton!
     
     
     var alamofireSource: [AlamofireSource] = []
@@ -34,15 +35,12 @@ class DetailProductoController: UIViewController {
         
             //Images
             if producto?.imagen1 != "" {
-                print ("anyade imagen1")
                 alamofireSource.append(AlamofireSource(urlString: producto!.imagen1!)!)
             }
             if producto?.imagen2 != "" {
-                print ("imagen2")
                 alamofireSource.append(AlamofireSource(urlString: producto!.imagen2!)!)
             }
             if producto?.imagen3 != "" {
-                print ("imagen3")
                 alamofireSource.append(AlamofireSource(urlString: producto!.imagen3!)!)
             }
             
@@ -78,7 +76,6 @@ class DetailProductoController: UIViewController {
                 of: .value,
                 with: {
                     (snapshot) in
-                    print (snapshot)
                     
                     if let dictionary = snapshot.value as? [String: AnyObject] {
                         self.productoUsuario = Usuario(dictionary: dictionary)
@@ -101,11 +98,26 @@ class DetailProductoController: UIViewController {
         /* Perfil */
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         perfilView.addGestureRecognizer(tap)
-        
-        /* Comprobar si el usuario es el usuario actual */
+                
+         /* Ocultar boton si es usuario actual */
         let current_user_id =  Auth.auth().currentUser?.uid
         if (current_user_id == producto?.usuario) {
-            print ("ocultar cosas")
+            intercambiarButton.isHidden = true
+        }
+        
+        /* Ocultar boton si ya se ha hecho un intercambio con ese usuario */
+        else {
+            let usuario_producto = producto?.usuario
+            let refUsuario = Database.database().reference().child("usuarios-intercambios").child(current_user_id!)
+            refUsuario.observe(.childAdded, with: { (snapshot) in
+                
+                let intercambio = snapshot.value as! [String : AnyObject]
+                let con_usuario = intercambio["con_usuario"] as! String
+   
+                if (con_usuario == usuario_producto ) {
+                    self.intercambiarButton.isHidden = true
+                }
+            })
         }
         
     }
@@ -146,7 +158,6 @@ class DetailProductoController: UIViewController {
     
     
     @IBAction func intercambiar(){
-        print ("intercambiar")
         
         /* INTERCAMBIOS */
         let ref = Database.database().reference().child("intercambios")

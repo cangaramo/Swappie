@@ -34,6 +34,10 @@ class ChatController:UIViewController, UITextFieldDelegate{
         //self.hideKeyboardWhenTappedAround()
         
         inputTextField?.delegate = self
+        //inputTextField?.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
+        
+        inputTextField?.addTarget(self, action: #selector(textFieldDidChange), for: UIControl.Event.editingChanged)
+
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
@@ -49,11 +53,28 @@ class ChatController:UIViewController, UITextFieldDelegate{
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.animateTextField(textField: textField, up:true)
+        
+
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         self.animateTextField(textField: textField, up:false)
         
+    }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        print ("Text has changed")
+        
+        if (textField.text!.isEmpty){
+            sendButton!.backgroundColor = UIColor(rgb:0xdedede)
+            sendButton!.setImage(UIImage(named: "white-send"), for: UIControl.State.normal)
+            sendButton?.isEnabled = false
+        }
+        else {
+            sendButton!.backgroundColor = UIColor(rgb:0xFCE1DA)
+            sendButton!.setImage(UIImage(named: "send"), for: UIControl.State.normal)
+            sendButton?.isEnabled = false
+        }
     }
     
     func animateTextField(textField: UIView, up: Bool)
