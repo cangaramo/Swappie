@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "lupa50-1.png",
+      "filename" : "cancel50.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "lupa100-1.png",
+      "filename" : "cancel100.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "lupa150.png",
+      "filename" : "cancel150.png",
       "scale" : "3x"
     }
   ],

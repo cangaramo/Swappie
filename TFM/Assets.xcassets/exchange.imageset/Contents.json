@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "exchange.png",
+      "filename" : "exchange40.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "exchange80.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "exchange120.png",
       "scale" : "3x"
     }
   ],
