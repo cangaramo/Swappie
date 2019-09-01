@@ -23,6 +23,16 @@ class IntercambioCell: UITableViewCell {
            // self.usuario1Label!.text = intercambio!.usuario1
             self.estadoLabel!.text = intercambio!.estado
             
+            print ("intercambiooooo")
+            print (intercambio!.estado!)
+            if (intercambio!.estado! == "Aceptado"){
+                print ("yes")
+                self.estadoLabel?.superview!.backgroundColor = UIColor(rgb:0x5446d9)
+            }
+            if (intercambio!.estado! == "Pendiente") {
+                self.estadoLabel?.superview!.superview!.backgroundColor = UIColor(rgb:0xd5d3f2)
+            }
+            
             //Find user
             let usuario_id = intercambio!.con_usuario
             

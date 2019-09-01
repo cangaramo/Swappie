@@ -43,14 +43,26 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         tableView?.reloadData()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        //self.navigationController?.navigationBar.backgroundColor = UIColor.white
+    }
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         
         /*
         let codeSegmented = CustomSegmentedControl(frame: CGRect(x: 0, y: 50, width: self.view.frame.width, height: 50), buttonTitle: ["OFF","HTTP","AUTO"])
         codeSegmented.backgroundColor = .clear
         view.addSubview(codeSegmented)*/
+        
+        /*
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true */
+        //self.navigationController?.navigationBar.backgroundColor = UIColor.white
     }
     
     

@@ -47,16 +47,20 @@ class DetailProductoController: UIViewController {
         }
     }
 
-
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-        /* Navigation bar */
+        /* Navigation bar
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.backgroundColor = .clear */
         
+       // self.navigationController?.navigationBar.backgroundColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.5)
+
+        //self.navigationController?.navigationBar.backgroundColor = UIColor.white
         /* Slideshow */
         configurarSlideshow()
         

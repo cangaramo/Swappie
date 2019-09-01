@@ -24,6 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Raleway-Regular", size: 15)!], for: UIControl.State.normal)
         
+       // UITabBar.appearance().selectedImageTintColor = UIColor.black
+        //UITabBar.appearance().unselectedItemTintColor = UIColor(rgb:0xf45b55)
+
+        UITabBar.appearance().tintColor = UIColor(rgb:0x5446d9)
+        UITabBar.appearance().barTintColor = UIColor.white
+        
         return true
     }
 

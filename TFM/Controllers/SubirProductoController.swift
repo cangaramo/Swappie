@@ -10,12 +10,14 @@ import Foundation
 import UIKit
 import Firebase
 
-class SubirProductoController: UIViewController, UITextViewDelegate {
+class SubirProductoController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
     
     @IBOutlet var tituloTextField:UITextField?
     @IBOutlet var descripcionTexView:UITextView?
+    @IBOutlet var descripcionContainer:UIView?
     @IBOutlet var marcaTextField:UITextField?
     @IBOutlet var tallaTextField:UITextField?
+    @IBOutlet var categoriaTextField:UITextField?
     @IBOutlet var subirProductoButton:UIButton?
     @IBOutlet var previewImage1:UIImageView?
     @IBOutlet var previewImage2:UIImageView?
@@ -39,8 +41,99 @@ class SubirProductoController: UIViewController, UITextViewDelegate {
         setUIPicker()
         setImagePickers()
         
+        tituloTextField?.delegate = self
+        marcaTextField?.delegate = self
+        tallaTextField?.delegate = self
+        categoriaTextField?.delegate = self
+        
+        tituloTextField!.tag = 0
+        descripcionTexView!.tag = 1
+        marcaTextField!.tag = 2
+        categoriaTextField!.tag = 3
+        tallaTextField!.tag = 4
+        
+        let border_color = UIColor(rgb: 0xd3d3d3)
+        addBorder(textField: tituloTextField!, border_color: border_color)
+        addBorder(textField: marcaTextField!, border_color: border_color)
+        addBorder(textField: tallaTextField!, border_color: border_color)
+        addBorder(textField: categoriaTextField!, border_color: border_color)
+        addBorder(textField: descripcionContainer!, border_color: border_color)
+        
+        
+        self.hideKeyboardWhenTappedAround()
+        
         /* Subir producto */
         subirProductoButton!.addTarget(self, action: #selector(subirProducto), for: .touchUpInside)
+    }
+    
+    /* Métodos */
+    func animateTextField(textField: UIView, up: Bool)
+    {
+        let movementDistance:CGFloat = -150
+        let movementDuration: Double = 0.3
+        
+        var movement:CGFloat = 0
+        if up
+        {
+            movement = movementDistance
+        }
+        else
+        {
+            movement = -movementDistance
+        }
+        UIView.beginAnimations("animateTextField", context: nil)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        UIView.setAnimationDuration(movementDuration)
+        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
+        UIView.commitAnimations()
+    }
+    
+    func addBorder(textField: UIView, border_color: UIColor){
+        let width = CGFloat(1.0)
+        let border = CALayer()
+        border.borderColor = border_color.cgColor
+        border.frame = CGRect(x: 0, y: textField.frame.size.height - width, width:  textField.frame.size.width, height: textField.frame.size.height)
+        border.borderWidth = width
+        textField.layer.addSublayer(border)
+        textField.layer.masksToBounds = true
+    }
+    
+    /* Text fields */
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let border_color = UIColor(rgb: 0x5446D9)
+        addBorder(textField: textField, border_color: border_color)
+        
+        self.animateTextField(textField: textField, up:true)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let border_color = UIColor(rgb: 0xd3d3d3)
+        addBorder(textField: textField, border_color: border_color)
+        
+        self.animateTextField(textField: textField, up:false)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        switch (textField.tag){
+        case 0:
+            descripcionTexView?.becomeFirstResponder()
+            break
+        case 1:
+            marcaTextField?.becomeFirstResponder()
+            break
+        case 2:
+            categoriaTextField?.becomeFirstResponder()
+            break
+        case 3:
+            tallaTextField?.becomeFirstResponder()
+            break
+        default:
+             textField.resignFirstResponder()
+        }
+        
+        // Do not add a line break
+        return false
     }
     
     func setViews(){
@@ -49,19 +142,43 @@ class SubirProductoController: UIViewController, UITextViewDelegate {
         descripcionTexView!.textColor = UIColor.lightGray
     }
     
+    /* Text view */
     func textViewDidBeginEditing(_ textView: UITextView) {
+        /*
+        if descripcionTexView!.textColor == UIColor.lightGray {
+            descripcionTexView!.text = nil
+            descripcionTexView!.textColor = UIColor.black
+        }*/
+        
+        let border_color = UIColor(rgb: 0x5446D9)
+        addBorder(textField: textView.superview!, border_color: border_color)
+        
         if descripcionTexView!.textColor == UIColor.lightGray {
             descripcionTexView!.text = nil
             descripcionTexView!.textColor = UIColor.black
         }
+        
+        self.animateTextField(textField: textView, up:true)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
+        /*
+        if descripcionTexView!.text.isEmpty {
+            descripcionTexView!.text = "Añade una descripción"
+            descripcionTexView!.textColor = UIColor.lightGray
+        }*/
+        
+        let border_color = UIColor(rgb: 0xd3d3d3)
+        addBorder(textField: textView.superview!, border_color: border_color)
+        
         if descripcionTexView!.text.isEmpty {
             descripcionTexView!.text = "Añade una descripción"
             descripcionTexView!.textColor = UIColor.lightGray
         }
+        
+        self.animateTextField(textField: textView, up:false)
     }
+    
 
     //Primero subir las imagenes y despues guardar producto
     @objc func subirProducto(){

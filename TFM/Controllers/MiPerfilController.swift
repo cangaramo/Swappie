@@ -37,7 +37,9 @@ class MiPerfilController: UIViewController {
                     //Añadir info
                     self.perfilLabel?.text = self.usuario!.nombre
                     self.emailLabel?.text = self.usuario!.email
-                    self.perfilImageView!.loadImageUsingCacheWithUrlString(self.usuario!.imagen!)
+                    if (self.usuario!.imagen != "") {
+                        self.perfilImageView!.loadImageUsingCacheWithUrlString(self.usuario!.imagen!)
+                    }
                 
                 }
                 
@@ -74,10 +76,17 @@ class MiPerfilController: UIViewController {
     @IBAction func editarPerfil(){
         print ("editar perfil")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        
         if let editarPerfil = (storyboard.instantiateViewController(withIdentifier: "editarPerfil") as? EditarPerfilController) {
             editarPerfil.usuario = usuario
             self.present(editarPerfil, animated: true, completion: nil)
         }
+        /*
+        let usuarioController = storyboard.instantiateViewController(withIdentifier: "editarPerfil") as! EditarPerfilController
+        usuarioController.usuario = usuario
+        navigationController?.pushViewController(usuarioController,animated: true)*/
+        
     }
     
 }

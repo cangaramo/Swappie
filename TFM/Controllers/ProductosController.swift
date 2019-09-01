@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 import Firebase
 
-class ProductosController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
+class ProductosController: UIViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     
     @IBOutlet var collectionView:UICollectionView?
     private let itemsPerRow: CGFloat = 2
@@ -19,6 +19,9 @@ class ProductosController: UIViewController, UICollectionViewDelegateFlowLayout,
                                              left: 5.0,
                                              bottom: 50.0,
                                              right: 5.0)
+    
+    //Search bar
+    @IBOutlet weak var searchBar: UISearchBar!
 
     
     //Todos los mensajes
@@ -26,10 +29,57 @@ class ProductosController: UIViewController, UICollectionViewDelegateFlowLayout,
     
     override func viewDidLoad() {
         print("Productos")
+        
+        
+
+        
+        searchBar.delegate = self
+        searchBar.backgroundImage = UIImage()
+        let light_gray = UIColor(rgb:0xffffff)
+        searchBar.backgroundColor = light_gray
+        searchBar.setImage(UIImage(), for: .clear, state: .normal)
+        
+        //self.navigationController?.navigationBar.backgroundColor = UIColor.white 
+        
+        //self.navigationController?.navigationBar.backgroundColor = UIColor(red: 1.0, green: 255, blue: 255, alpha: 0)
+        /*
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true*/
+        
+        let textFieldInsideUISearchBar = searchBar.value(forKey: "searchField") as? UITextField
+       // textFieldInsideUISearchBar?.textColor = UIColor.red
+        textFieldInsideUISearchBar?.backgroundColor = UIColor(rgb:0xf9f9f9)
+        
+        //textFieldInsideUISearchBar?.font = textFieldInsideUISearchBar?.font?.withSize(12)
+        textFieldInsideUISearchBar?.font =  UIFont(name: "Raleway-Regular", size: 14)
+        
         obtenerProductos()
+        
     }
     
-
+    //Start search
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    //Cancel search button
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.endEditing(true)
+    }
+    
+    //Search button
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.endEditing(true)
+        
+        //Refresh
+        //filtering = false
+        //self.listTableView.reloadData()
+    }
+    
     
     func obtenerProductos() {
         Database.database().reference().child("productos")

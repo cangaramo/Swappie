@@ -41,7 +41,7 @@ class RegistroController: ViewController{
             guard let uid = res?.user.uid else {
                 return
             }
-            let values = ["nombre": nombre, "email": email]
+            let values = ["nombre": nombre, "email": email, "descripcion": "", "ubicacion": "", "genero": "", "imagen": ""]
             
             //successfully authenticated user
             let ref = Database.database().reference()

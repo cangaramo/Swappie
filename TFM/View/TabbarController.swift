@@ -17,6 +17,10 @@ class TabbarViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         self.delegate = self
         
+       // self.tabBar.barTintColor =  UIColor.white
+        //self.tabBarItem.badgeColor = UIColor.red
+
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         //1. Productos

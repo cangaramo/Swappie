@@ -30,6 +30,10 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
         ubicacionTextField!.delegate = self
         generoTextField!.delegate = self
         
+        nombreTextField!.tag = 0
+        ubicacionTextField!.tag = 1
+        generoTextField!.tag = 3
+        
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: nombreTextField!, border_color: border_color)
         addBorder(textField: ubicacionTextField!, border_color: border_color)
@@ -51,6 +55,7 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
     func setViews(){
         //Descripcion
         descripcionTextView!.delegate = self
+        descripcionTextView!.tag = 2
         descripcionTextView?.text = "Añade una descripción"
         descripcionTextView!.textColor = UIColor.lightGray
     }
@@ -130,7 +135,7 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        let border_color = UIColor(rgb: 0xEA9085)
+        let border_color = UIColor(rgb: 0x5446D9)
         addBorder(textField: textField, border_color: border_color)
         
         self.animateTextField(textField: textField, up:true)
@@ -146,7 +151,7 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
     
     func animateTextField(textField: UIView, up: Bool)
     {
-        let movementDistance:CGFloat = -130
+        let movementDistance:CGFloat = -200
         let movementDuration: Double = 0.3
         
         var movement:CGFloat = 0
@@ -177,7 +182,7 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         
-        let border_color = UIColor(rgb: 0xEA9085)
+        let border_color = UIColor(rgb: 0x5446D9)
         addBorder(textField: textView.superview!, border_color: border_color)
         
         if descripcionTextView!.textColor == UIColor.lightGray {
@@ -204,6 +209,23 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
     @IBAction func cancelar() {
         dismiss(animated: true, completion: nil)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+            nextField.becomeFirstResponder()
+        }
+        else if let nextView = textField.superview?.viewWithTag(textField.tag + 1) as? UITextView  {
+            nextView.becomeFirstResponder()
+        }
+        else {
+            // Not found, so remove keyboard.
+            textField.resignFirstResponder()
+        }
+        // Do not add a line break
+        return false
+    }
+    
     
     @IBAction func guardar(){
         

@@ -60,7 +60,7 @@ class AnyadirProductosController:UIViewController, UICollectionViewDelegateFlowL
                      self.timer?.invalidate()
                      print("we just canceled our timer")
                      
-                     self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+                     self.timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
                      print("schedule a table reload in 0.2 sec")
                     
                 }
@@ -108,7 +108,7 @@ class AnyadirProductosController:UIViewController, UICollectionViewDelegateFlowL
         if (seleccionado) {
           //  cell.layer.borderWidth = 2
            // cell.layer.borderColor = UIColor(rgb: 0xEA9085).cgColor
-             cell.containerView!.layer.borderColor = UIColor(rgb: 0xEA9085).cgColor
+             cell.containerView!.layer.borderColor = UIColor(rgb: 0xf45b55).cgColor
         }
         else {
            // cell.layer.borderWidth = 2
@@ -153,7 +153,7 @@ class AnyadirProductosController:UIViewController, UICollectionViewDelegateFlowL
         else {
            // cell.layer.borderWidth = 2
            // cell.layer.borderColor = UIColor(rgb: 0xEA9085).cgColor
-            cell.containerView!.layer.borderColor = UIColor(rgb: 0xEA9085).cgColor
+            cell.containerView!.layer.borderColor = UIColor(rgb: 0xf45b55).cgColor
             productos_seleccionados.append(producto)
         }
     }
