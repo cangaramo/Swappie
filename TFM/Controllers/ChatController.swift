@@ -73,7 +73,7 @@ class ChatController:UIViewController, UITextFieldDelegate{
         else {
             sendButton!.backgroundColor = UIColor(rgb:0xFCE1DA)
             sendButton!.setImage(UIImage(named: "send"), for: UIControl.State.normal)
-            sendButton?.isEnabled = false
+            sendButton?.isEnabled = true
         }
     }
     
@@ -164,6 +164,7 @@ class ChatController:UIViewController, UITextFieldDelegate{
     
     //Send message
     @IBAction func handleSend(){
+        print ("wtf")
         
         if (inputTextField!.text! != "" ) {
             

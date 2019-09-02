@@ -26,14 +26,17 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     
     //Todos los mensajes
     var productos = [Producto]()
+    
     var categoria_seleccionada:String?
     var genero_seleccionado:String?
+    
+    //Search
+    var filteredProductos = [Producto]()
+    var filtering:Bool = false
     
     override func viewDidLoad() {
         print("Productos")
         
-        
-
         
         searchBar.delegate = self
         searchBar.backgroundImage = UIImage()
@@ -79,10 +82,36 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         searchBar.endEditing(true)
         
         //Refresh
-        //filtering = false
-        //self.listTableView.reloadData()
+        filtering = false
+        self.collectionView!.reloadData()
     }
     
+    //Search function
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        let keyword:String = searchText
+        
+        if (!keyword.isEmpty){
+            let buscar_productos = productos
+            
+            filteredProductos = buscar_productos.filter(
+                { (producto:Producto) -> Bool in
+                    
+                    var match = false
+                    if ( producto.titulo!.contains(keyword) || producto.marca!.contains(keyword) || producto.categoria!.contains(keyword) || producto.descripcion!.contains(keyword) ){
+                        match = true
+                    }
+                    return match
+            })
+            
+            filtering = true
+        }
+        else {
+            filtering = false
+        }
+        
+        self.collectionView!.reloadData()
+    }
     
     func obtenerProductos() {
         Database.database().reference().child("productos")
@@ -130,12 +159,23 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return productos.count
+        
+        if (filtering){
+            return filteredProductos.count
+        }
+        else {
+            return productos.count
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let producto = productos[indexPath.item]
+        var producto = productos[indexPath.item]
+        
+        if (filtering){
+            producto = filteredProductos[indexPath.item]
+        }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! ProductoCell
         

@@ -15,7 +15,8 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         
         /*  Configurar picker */
         uiPicker = UIPickerView(frame: CGRect(x: 0, y: 200, width: view.frame.width, height: 300))
-        uiPicker.backgroundColor = .white
+       uiPicker.backgroundColor = UIColor(rgb:0xf5f5f5)
+        //uiPicker.backgroundColor = UIColor.white
         
         uiPicker.showsSelectionIndicator = true
         uiPicker.delegate = self
@@ -25,7 +26,8 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         let toolBar = UIToolbar()
         toolBar.barStyle = UIBarStyle.default
         toolBar.isTranslucent = true
-        toolBar.tintColor = UIColor(red: 234/255, green: 144/255, blue: 133/255, alpha: 1)
+        toolBar.tintColor = UIColor(rgb:0x0f45b55)
+        toolBar.barTintColor = UIColor.white
         toolBar.sizeToFit()
         
         /* Actions */
@@ -39,6 +41,29 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         tallaTextField!.inputView = uiPicker
         tallaTextField!.inputAccessoryView = toolBar
         
+        condicionTextField!.inputView = uiPicker
+        condicionTextField!.inputAccessoryView = toolBar
+        
+    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        var label = UILabel()
+        if let v = view {
+            label = v as! UILabel
+        }
+        label.font = UIFont (name: "Raleway-Regular", size: 18)
+        
+        label.textAlignment = .center
+        
+        if (tallaTextField!.isFirstResponder){
+            label.text =  salutations[row]
+        }
+        else {
+            label.text =  estados[row]
+        }
+        
+        return label
     }
     
     /* Picker view metodos */
@@ -48,19 +73,44 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return salutations.count
+        
+        if (tallaTextField!.isFirstResponder){
+           return salutations.count
+        }
+        else {
+            return estados.count
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return salutations[row]
+        
+        if (tallaTextField!.isFirstResponder){
+            return salutations[row]
+        }
+        else {
+            return estados[row]
+        }
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        tallaTextField!.text = salutations[row]
+        
+        if (tallaTextField!.isFirstResponder){
+            tallaTextField!.text = salutations[row]
+        }
+        else if (condicionTextField!.isFirstResponder){
+            condicionTextField!.text = estados[row]
+        }
+        
     }
     
     /* Action done */
     
     @objc func donePicker() {
-        tallaTextField!.resignFirstResponder()
+        if (tallaTextField!.isFirstResponder){
+            tallaTextField!.resignFirstResponder()
+        }
+        else if (condicionTextField!.isFirstResponder){
+            condicionTextField!.resignFirstResponder()
+        }
+        
     }
 }

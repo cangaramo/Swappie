@@ -18,6 +18,7 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
     @IBOutlet var marcaTextField:UITextField?
     @IBOutlet var tallaTextField:UITextField?
     @IBOutlet var categoriaTextField:UITextField?
+    @IBOutlet var condicionTextField:UITextField?
     @IBOutlet var subirProductoButton:UIButton?
     @IBOutlet var previewImage1:UIImageView?
     @IBOutlet var previewImage2:UIImageView?
@@ -30,6 +31,7 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
     var url_images: [String] = []
     
     let salutations = ["XXS", "XS", "S", "M", "L", "XL", "XXL"]
+    let estados = ["Sin estrenar", "Apenas usado", "En muy buen estado", "Bastante usado"]
     
     var genero:String = ""
     var categoriaId:String? = ""
@@ -50,18 +52,21 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
         marcaTextField?.delegate = self
         tallaTextField?.delegate = self
         categoriaTextField?.delegate = self
+        condicionTextField?.delegate = self
         
         tituloTextField!.tag = 0
         descripcionTexView!.tag = 1
         marcaTextField!.tag = 2
         categoriaTextField!.tag = 3
         tallaTextField!.tag = 4
+        condicionTextField!.tag = 5
         
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: tituloTextField!, border_color: border_color)
         addBorder(textField: marcaTextField!, border_color: border_color)
         addBorder(textField: tallaTextField!, border_color: border_color)
         addBorder(textField: categoriaTextField!, border_color: border_color)
+        addBorder(textField: condicionTextField!, border_color: border_color)
         addBorder(textField: descripcionContainer!, border_color: border_color)
         
         
