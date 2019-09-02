@@ -13,6 +13,8 @@ class Producto: NSObject {
     var descripcion: String?
     var marca: String?
     var talla:String?
+    var categoria:String?
+    var genero:String?
     var imagen1: String?
     var imagen2: String?
     var imagen3: String?
@@ -24,6 +26,8 @@ class Producto: NSObject {
         self.descripcion = dictionary["descripcion"] as? String
         self.marca = dictionary["marca"] as? String
         self.talla = dictionary["talla"] as? String
+        self.categoria = dictionary["categoria"] as? String
+        self.genero = dictionary["genero"] as? String
         self.imagen1 = dictionary["imagen1"] as? String
         self.imagen2 = dictionary["imagen2"] as? String
         self.imagen3 = dictionary["imagen3"] as? String

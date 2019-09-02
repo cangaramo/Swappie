@@ -26,6 +26,8 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     
     //Todos los mensajes
     var productos = [Producto]()
+    var categoria_seleccionada:String?
+    var genero_seleccionado:String?
     
     override func viewDidLoad() {
         print("Productos")
@@ -54,6 +56,7 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         //textFieldInsideUISearchBar?.font = textFieldInsideUISearchBar?.font?.withSize(12)
         textFieldInsideUISearchBar?.font =  UIFont(name: "Raleway-Regular", size: 14)
         
+        print (categoria_seleccionada)
         obtenerProductos()
         
     }
@@ -89,14 +92,20 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
                     
                     let producto = Producto(dictionary: dictionary)
                     producto.id = snapshot.key
-                    self.productos.append(producto)
                     
-                    //Background thread
-                    self.timer?.invalidate()
-                    print("we just canceled our timer")
-                    
-                    self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-                    print("schedule a table reload in 0.1 sec")
+                    //Mostrar solo los que pertenecen a esa categoria
+                    if (producto.genero == self.genero_seleccionado){
+                        if (producto.categoria == self.categoria_seleccionada || self.categoria_seleccionada == "_todo") {
+                            self.productos.append(producto)
+                            
+                            //Background thread
+                            self.timer?.invalidate()
+                            print("we just canceled our timer")
+                            
+                            self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+                            print("schedule a table reload in 0.1 sec")
+                        }
+                    }
                     
                 }
                 

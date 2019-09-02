@@ -18,6 +18,7 @@ class IntercambiosController:UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         //obtenerIntercambios()
+        self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
     
     override func viewDidAppear(_ animated: Bool) {

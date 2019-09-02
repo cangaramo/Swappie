@@ -73,7 +73,8 @@ class TabbarViewController: UITabBarController, UITabBarControllerDelegate {
         if viewController.isKind(of: SubirProductoController.self) {
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier :"subirProductosController") as! SubirProductoController
+           // let vc = storyboard.instantiateViewController(withIdentifier :"subirProductosController") as! SubirProductoController
+             let vc = storyboard.instantiateViewController(withIdentifier :"subirProductoNavigation") as! UINavigationController
             vc.modalPresentationStyle = .overFullScreen
             self.present(vc, animated: true, completion: nil)
             

@@ -49,6 +49,7 @@ class MiPerfilController: UIViewController {
     
     override func viewDidLoad() {
         print("Welcome")
+        self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
     
     @IBAction func verPerfil(){

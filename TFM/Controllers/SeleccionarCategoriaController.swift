@@ -1,8 +1,8 @@
 //
-//  CategoriasController.swift
+//  seleccionarCategoriaController.swift
 //  TFM
 //
-//  Created by Clarisa Angaramo on 10/08/2019.
+//  Created by Clarisa Angaramo on 02/09/2019.
 //  Copyright © 2019 Clarisa. All rights reserved.
 //
 
@@ -10,27 +10,26 @@ import Foundation
 import UIKit
 import Firebase
 
-class CategoriasController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
-    var firstArray = ["Vaqueros", "Camisetas", "Sudaderas"]
-    var secondArray = ["Camisetas", "Pantalones", "Faldas", "Zapatos", "Accesorios", "Vestidos"]
+class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
     var categoriasMujer = [Categoria]()
-    var categoriasHombre = [Categoria]()
+     var categoriasHombre = [Categoria]()
     
     var segmentedControlIndex = 0
     
+    var seleccionarCategoria : ( (String, String, String) -> Void)?
+    
     @IBOutlet var tableView: UITableView?
-  //  @IBOutlet var segmentedControl: UISegmentedControl?
+    //  @IBOutlet var segmentedControl: UISegmentedControl?
     
     @IBOutlet weak var interfaceSegmented: CustomSegmentedControl!{
         didSet{
             interfaceSegmented.setButtonTitles(buttonTitles: ["Mujer","Hombre"])
-            interfaceSegmented.selectorViewColor = UIColor(rgb: 0x5446d9)
-            interfaceSegmented.selectorTextColor = UIColor(rgb: 0x5446d9)
-
+            interfaceSegmented.selectorViewColor = UIColor(rgb: 0xf45b55)
+            interfaceSegmented.selectorTextColor = UIColor(rgb: 0xf45b55)
+            
             interfaceSegmented.Test = self.Test
-
+            
         }
     }
     
@@ -46,12 +45,6 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         
         observeCategoriasMujer()
         observeCategoriasHombre()
-        
-        /*
-         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-         self.navigationController?.navigationBar.shadowImage = UIImage()
-         self.navigationController?.navigationBar.isTranslucent = true */
-        //self.navigationController?.navigationBar.backgroundColor = UIColor.white
     }
     
     //Categorias hombre
@@ -90,7 +83,7 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         }, withCancel: nil)
     }
     
-    //Categorias mujer
+    //Observe messages
     func observeCategoriasMujer() {
         
         //Buscamos ese usuario en Categorias mujer
@@ -99,9 +92,13 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         //Loop mensaje
         ref.observe(.childAdded, with: { (snapshot) in
             
+            print ("OBSERVE")
+            
             //Cogemos la categoria
             let categoriaId = snapshot.key
-
+            
+            print (categoriaId)
+            
             //Y ahora vamos a MESSAGES
             let categoriasReference = ref.child(categoriaId)
             
@@ -109,11 +106,12 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
             categoriasReference.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
+                    
                     let categoria = Categoria(dictionary: dictionary)
-                    categoria.categoriaID = categoriaId
+                    categoria.categoriaID = snapshot.key
                     
                     self.categoriasMujer.append(categoria)
-    
+                    
                     self.timer?.invalidate()
                     print("we just canceled our timer")
                     
@@ -133,7 +131,6 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         //this will crash because of background thread, so lets call this on dispatch_async main thread
         DispatchQueue.main.async(execute: {
             print("we reloaded the table")
-           // print (self.messages)
             self.tableView?.reloadData()
         })
     }
@@ -148,6 +145,7 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
     }
     
     
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //if (segmentedControl?.selectedSegmentIndex == 1) {
         if (segmentedControlIndex == 0){
@@ -160,7 +158,7 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! CategoriaCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! SeleccionarCategoriaCell
         
         if (segmentedControlIndex == 0){
             let categoria = categoriasMujer[indexPath.row]
@@ -178,29 +176,23 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //Obtener genero
+        //Genero
         var genero = ""
         if (segmentedControlIndex == 0){
-            genero = "mujer"
+           genero = "mujer"
         }
         else {
             genero = "hombre"
         }
         
-        //Obtener categoria
+        //Categoria
         let categoria = categoriasMujer[indexPath.row]
-        let categoria_id = categoria.categoriaID
         
-        //Ir a productos
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let productosController = storyboard.instantiateViewController(withIdentifier :"productosController") as! ProductosController
-        productosController.categoria_seleccionada = categoria_id
-        productosController.genero_seleccionado = genero
-        self.navigationController?.pushViewController(productosController, animated: true)
+        self.seleccionarCategoria!(categoria.categoriaID!, categoria.nombre!, genero)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func changed(){
         tableView?.reloadData()
     }
-    
 }

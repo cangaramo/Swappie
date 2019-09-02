@@ -31,11 +31,16 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
     
     let salutations = ["XXS", "XS", "S", "M", "L", "XL", "XXL"]
     
+    var genero:String = ""
+    var categoriaId:String? = ""
+    
     @IBAction func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
+        
+        self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         
         setViews()
         setUIPicker()
@@ -69,7 +74,7 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
     /* Métodos */
     func animateTextField(textField: UIView, up: Bool)
     {
-        let movementDistance:CGFloat = -150
+        let movementDistance:CGFloat = -100
         let movementDuration: Double = 0.3
         
         var movement:CGFloat = 0
@@ -100,13 +105,42 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
     
     /* Text fields */
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        let border_color = UIColor(rgb: 0x5446D9)
-        addBorder(textField: textField, border_color: border_color)
         
-        self.animateTextField(textField: textField, up:true)
+        if (textField.tag == 3 ) {
+            
+            textField.resignFirstResponder()
+            
+           seleccionarCategoria()
+        }
+        else {
+            let border_color = UIColor(rgb: 0x5446D9)
+            addBorder(textField: textField, border_color: border_color)
+            self.animateTextField(textField: textField, up:true)
+        }
+        
+    }
+    
+    
+    /* Obtener los productos seleccionados */
+    func seleccionarCategoria(categoria_id:String, categoria_nombre:String, genero: String){
+
+        //Genero
+        self.genero = genero
+        
+        //Categoria
+        if (categoria_nombre == "Ver todo" ){
+            categoriaTextField!.text = "Otro"
+            self.categoriaId = "otro"
+        }
+        else {
+            categoriaTextField!.text = categoria_nombre
+            self.categoriaId = categoria_id
+        }
+        
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: textField, border_color: border_color)
         
@@ -123,7 +157,9 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
             marcaTextField?.becomeFirstResponder()
             break
         case 2:
-            categoriaTextField?.becomeFirstResponder()
+            //categoriaTextField?.becomeFirstResponder()
+            textField.resignFirstResponder()
+            seleccionarCategoria()
             break
         case 3:
             tallaTextField?.becomeFirstResponder()
@@ -134,6 +170,13 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
         
         // Do not add a line break
         return false
+    }
+    
+    func seleccionarCategoria(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let seleccionarCategoriaController = storyboard.instantiateViewController(withIdentifier: "seleccionarCategoriaController") as! SeleccionarCategoriaController
+        seleccionarCategoriaController.seleccionarCategoria = self.seleccionarCategoria
+        navigationController?.pushViewController(seleccionarCategoriaController,animated: true)
     }
     
     func setViews(){
@@ -264,9 +307,11 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
                       "marca": marca,
                       "talla": talla,
                       "usuario": user_id,
+                      "genero" : genero,
+                      "categoria": categoriaId,
                       "imagen1": image1,
                       "imagen2": image2,
-                      "imagen3": image3] as [String : Any]
+                      "imagen3": image3,] as [String : Any]
         
         //Anyadir primero a PRODUCTOS
         childRef.updateChildValues(values) { (error, ref) in
