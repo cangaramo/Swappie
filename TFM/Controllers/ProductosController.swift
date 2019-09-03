@@ -149,6 +149,14 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         })
     }
     
+    @IBAction func abrirFiltros(){
+        print ("filtrar")
+        //Detail Producto Controller
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let filtrosController = storyboard.instantiateViewController(withIdentifier: "filtrosController") as! FiltrosController
+        navigationController?.pushViewController(filtrosController,animated: true)
+    }
+    
     /* Collection view */
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

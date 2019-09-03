@@ -68,6 +68,7 @@
 		91B6F1A622FB6D4B00B9F4F6 /* AnyadirProductosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B6F1A522FB6D4B00B9F4F6 /* AnyadirProductosController.swift */; };
 		91C5260B22F0EA3500205144 /* EditarPerfilController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C5260A22F0EA3500205144 /* EditarPerfilController.swift */; };
 		91C5260D22F0EB2700205144 /* UsuarioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C5260C22F0EB2700205144 /* UsuarioController.swift */; };
+		91D08630231EF73500FA6372 /* FiltrosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D0862F231EF73500FA6372 /* FiltrosController.swift */; };
 		91DF5C4C22F8BBE600BB2F4D /* IntercambiosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DF5C4B22F8BBE600BB2F4D /* IntercambiosController.swift */; };
 		91EB4F8522FA057F0012259C /* Intercambio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EB4F8422FA057F0012259C /* Intercambio.swift */; };
 		91EB4F8722FA06560012259C /* IntercambioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EB4F8622FA06560012259C /* IntercambioCell.swift */; };
@@ -163,6 +164,7 @@
 		91B6F1A522FB6D4B00B9F4F6 /* AnyadirProductosController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyadirProductosController.swift; sourceTree = "<group>"; };
 		91C5260A22F0EA3500205144 /* EditarPerfilController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditarPerfilController.swift; sourceTree = "<group>"; };
 		91C5260C22F0EB2700205144 /* UsuarioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsuarioController.swift; sourceTree = "<group>"; };
+		91D0862F231EF73500FA6372 /* FiltrosController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltrosController.swift; sourceTree = "<group>"; };
 		91DF5C4B22F8BBE600BB2F4D /* IntercambiosController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntercambiosController.swift; sourceTree = "<group>"; };
 		91EB4F8422FA057F0012259C /* Intercambio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intercambio.swift; sourceTree = "<group>"; };
 		91EB4F8622FA06560012259C /* IntercambioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntercambioCell.swift; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				910F218122ECD3A3006B7232 /* IniciarSesionController.swift */,
 				91F7E17522FEC29B005B6684 /* CategoriasController.swift */,
 				910F218722ECDE1D006B7232 /* ProductosController.swift */,
+				91D0862F231EF73500FA6372 /* FiltrosController.swift */,
 				914A32E222EDE129006169D5 /* DetailProductoController.swift */,
 				910F218522ECDD5C006B7232 /* MiPerfilController.swift */,
 				91C5260C22F0EB2700205144 /* UsuarioController.swift */,
@@ -653,6 +656,7 @@
 				910F218C22ECE227006B7232 /* Usuario.swift in Sources */,
 				910F218022ECCFAC006B7232 /* RegistroController.swift in Sources */,
 				910F215022ECC700006B7232 /* AppDelegate.swift in Sources */,
+				91D08630231EF73500FA6372 /* FiltrosController.swift in Sources */,
 				914A32E522EDEA30006169D5 /* Producto.swift in Sources */,
 				910F218E22ECE9B3006B7232 /* TabbarController.swift in Sources */,
 				910F218622ECDD5C006B7232 /* MiPerfilController.swift in Sources */,
