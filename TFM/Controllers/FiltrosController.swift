@@ -15,9 +15,10 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     
     var uiPicker : UIPickerView!
     
-    let salutations = ["XXS", "XS", "S", "M", "L", "XL", "XXL"]
+    let salutations = ["", "XXS", "XS", "S", "M", "L", "XL", "XXL"]
+    var talla_seccionada = ""
     
-    let estados = ["optimo", "muy bueno", "bueno", "regular"]
+    let estados = ["Sin estrenar", "Apenas usado", "En muy buen estado", "Bastante usado"]
     var estados_seleccionados = [String]()
     
     @IBOutlet var estado1:UIView?
@@ -25,9 +26,36 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     @IBOutlet var estado3:UIView?
     @IBOutlet var estado4:UIView?
     
+    var devolverFiltros : ( (String, [String]) -> Void)?
+    
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+        if (talla_seccionada != ""){
+            tallaTextField?.text = talla_seccionada
+        }
+        
+        if (!estados_seleccionados.isEmpty){
+            
+            for estado_seleccionado in estados_seleccionados {
+                var index = 1
+                for estado in estados {
+                    if (estado_seleccionado == estado){
+                        print ("sasa")
+                        print (index)
+                        if let container_view = self.view.viewWithTag(index) as? UIView {
+                            container_view.backgroundColor =  UIColor(rgb:0x5446D9)
+                          //  container_view.backgroundColor = UIColor(rgb:0x5446D9)
+                        }
+                    }
+                    index = index + 1
+                }
+                
+            }
+        }
+        
         setUIPicker()
     
         // 3. add action to myView
@@ -47,7 +75,7 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
 
         let tag = checkbox.tag
         print ("tap")
-        let estado_selected = estados[tag]
+        let estado_selected = estados[tag-1]
         
         //Comprobar si ya esta en el array
         var encontrado = false
@@ -129,6 +157,8 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         if (tallaTextField!.isFirstResponder){
             label.text =  salutations[row]
         }
+        
+        talla_seccionada = salutations[row]
      
         return label
     }
@@ -159,5 +189,11 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         if (tallaTextField!.isFirstResponder){
             tallaTextField!.resignFirstResponder()
         }
+    }
+    
+    
+    @IBAction func filtrosDone(){
+        self.devolverFiltros!(talla_seccionada, estados_seleccionados)
+        self.navigationController?.popViewController(animated: true)
     }
 }

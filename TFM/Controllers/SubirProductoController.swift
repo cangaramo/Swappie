@@ -9,8 +9,11 @@
 import Foundation
 import UIKit
 import Firebase
+import MapKit
+import CoreLocation
 
-class SubirProductoController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class SubirProductoController: UIViewController, UITextViewDelegate, UITextFieldDelegate,
+CLLocationManagerDelegate {
     
     @IBOutlet var tituloTextField:UITextField?
     @IBOutlet var descripcionTexView:UITextView?
@@ -18,7 +21,7 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
     @IBOutlet var marcaTextField:UITextField?
     @IBOutlet var tallaTextField:UITextField?
     @IBOutlet var categoriaTextField:UITextField?
-    @IBOutlet var condicionTextField:UITextField?
+    @IBOutlet var estadoTextField:UITextField?
     @IBOutlet var subirProductoButton:UIButton?
     @IBOutlet var previewImage1:UIImageView?
     @IBOutlet var previewImage2:UIImageView?
@@ -36,6 +39,11 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
     var genero:String = ""
     var categoriaId:String? = ""
     
+    let locationManager = CLLocationManager()
+    var latitud_producto = ""
+    var longitud_producto = ""
+
+    
     @IBAction func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
@@ -52,21 +60,21 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
         marcaTextField?.delegate = self
         tallaTextField?.delegate = self
         categoriaTextField?.delegate = self
-        condicionTextField?.delegate = self
+        estadoTextField?.delegate = self
         
         tituloTextField!.tag = 0
         descripcionTexView!.tag = 1
         marcaTextField!.tag = 2
         categoriaTextField!.tag = 3
         tallaTextField!.tag = 4
-        condicionTextField!.tag = 5
+        estadoTextField!.tag = 5
         
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: tituloTextField!, border_color: border_color)
         addBorder(textField: marcaTextField!, border_color: border_color)
         addBorder(textField: tallaTextField!, border_color: border_color)
         addBorder(textField: categoriaTextField!, border_color: border_color)
-        addBorder(textField: condicionTextField!, border_color: border_color)
+        addBorder(textField: estadoTextField!, border_color: border_color)
         addBorder(textField: descripcionContainer!, border_color: border_color)
         
         
@@ -74,6 +82,25 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
         
         /* Subir producto */
         subirProductoButton!.addTarget(self, action: #selector(subirProducto), for: .touchUpInside)
+        
+        self.locationManager.requestAlwaysAuthorization()
+        
+        // For use in foreground
+        self.locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
+
+    }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        latitud_producto = String(locValue.latitude)
+        longitud_producto = String(locValue.longitude)
     }
     
     /* Métodos */
@@ -293,12 +320,15 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
         guard let titulo = tituloTextField!.text,
             let descripcion = descripcionTexView!.text,
             let marca = marcaTextField!.text,
-            let talla = tallaTextField!.text
+            let talla = tallaTextField!.text,
+            let estado = estadoTextField!.text
         else {
                 print("Form is not valid")
                 return
         }
         
+        //Estado
+    
         //FIREBASE
         let ref = Database.database().reference().child("productos")
         let childRef = ref.childByAutoId()
@@ -314,6 +344,9 @@ class SubirProductoController: UIViewController, UITextViewDelegate, UITextField
                       "usuario": user_id,
                       "genero" : genero,
                       "categoria": categoriaId,
+                      "latitud": latitud_producto,
+                      "longitud": longitud_producto,
+                      "estado": estado,
                       "imagen1": image1,
                       "imagen2": image2,
                       "imagen3": image3,] as [String : Any]

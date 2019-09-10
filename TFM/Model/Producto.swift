@@ -15,6 +15,9 @@ class Producto: NSObject {
     var talla:String?
     var categoria:String?
     var genero:String?
+    var estado: String?
+    var latitud: String?
+    var longitud: String?
     var imagen1: String?
     var imagen2: String?
     var imagen3: String?
@@ -28,6 +31,9 @@ class Producto: NSObject {
         self.talla = dictionary["talla"] as? String
         self.categoria = dictionary["categoria"] as? String
         self.genero = dictionary["genero"] as? String
+        self.estado = dictionary["estado"] as? String
+        self.latitud = dictionary["latitud"] as? String
+        self.longitud = dictionary["longitud"] as? String
         self.imagen1 = dictionary["imagen1"] as? String
         self.imagen2 = dictionary["imagen2"] as? String
         self.imagen3 = dictionary["imagen3"] as? String

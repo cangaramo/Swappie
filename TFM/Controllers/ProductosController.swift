@@ -34,6 +34,10 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     var filteredProductos = [Producto]()
     var filtering:Bool = false
     
+    //Filtros
+    var talla_seccionada = ""
+    var estados_seleccionados = [String]()
+    
     override func viewDidLoad() {
         print("Productos")
         
@@ -62,6 +66,7 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         print (categoria_seleccionada)
         obtenerProductos()
         
+        
     }
     
     //Start search
@@ -85,6 +90,8 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         filtering = false
         self.collectionView!.reloadData()
     }
+    
+    
     
     //Search function
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -120,6 +127,8 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     
                     let producto = Producto(dictionary: dictionary)
+                    print (producto)
+                    print (producto.latitud)
                     producto.id = snapshot.key
                     
                     //Mostrar solo los que pertenecen a esa categoria
@@ -149,11 +158,72 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         })
     }
     
+    //Filter
+    func filterContentForSearchText(talla:String, estados:[String]) {
+        
+        let buscar_productos = productos
+        
+        //Primero filtro
+        var filtroEstadoProductos = buscar_productos
+        if (!estados.isEmpty){
+            filtroEstadoProductos = buscar_productos.filter(
+                { (producto:Producto) -> Bool in
+                    
+                    var match = false
+                    for estado in estados {
+                        if ( producto.estado! == estado ){
+                            match = true
+                        }
+                    }
+                    return match
+            })
+        }
+        
+        //Segundo filtro
+        var filtroTallaProductos = filtroEstadoProductos
+        if (!talla.isEmpty){
+            filtroTallaProductos = filtroEstadoProductos.filter(
+                { (producto:Producto) -> Bool in
+                    
+                    var match = false
+                    if ( producto.talla! == talla ){
+                        match = true
+                    }
+                    return match
+            })
+        }
+        
+        filteredProductos = filtroTallaProductos
+        
+        filtering = true
+        self.collectionView!.reloadData()
+    }
+    
+    func devolverFiltros(talla:String, estados:[String]){
+
+        self.talla_seccionada = talla
+        self.estados_seleccionados = estados
+        
+        if (!talla.isEmpty || !estados.isEmpty){
+            print ("Filtrar")
+            filterContentForSearchText(talla:talla, estados:estados)
+        }
+        else {
+            filtering = false
+            self.collectionView!.reloadData()
+        }
+        
+    }
+    
+    
     @IBAction func abrirFiltros(){
         print ("filtrar")
         //Detail Producto Controller
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let filtrosController = storyboard.instantiateViewController(withIdentifier: "filtrosController") as! FiltrosController
+        filtrosController.devolverFiltros = self.devolverFiltros
+        filtrosController.talla_seccionada = self.talla_seccionada
+        filtrosController.estados_seleccionados = self.estados_seleccionados
         navigationController?.pushViewController(filtrosController,animated: true)
     }
     

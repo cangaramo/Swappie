@@ -13,6 +13,7 @@
 		6C8853D2231D2DB500A9D485 /* SeleccionarCategoriaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8853D1231D2DB500A9D485 /* SeleccionarCategoriaController.swift */; };
 		6C8853D4231D327400A9D485 /* SeleccionarCategoriaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8853D3231D327400A9D485 /* SeleccionarCategoriaCell.swift */; };
 		906C1A30EEAA742C5C5F603E /* Pods_TFMUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01BF8BDFF15598B37A72AE5 /* Pods_TFMUITests.framework */; };
+		9109E747232529CC000C312D /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9109E746232529CC000C312D /* MapController.swift */; };
 		910B49D222F37D2500187BC5 /* EditarPerfilController+ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910B49D122F37D2500187BC5 /* EditarPerfilController+ImagePicker.swift */; };
 		910F215022ECC700006B7232 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910F214F22ECC700006B7232 /* AppDelegate.swift */; };
 		910F215222ECC700006B7232 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910F215122ECC700006B7232 /* ViewController.swift */; };
@@ -103,6 +104,7 @@
 		6C8853D3231D327400A9D485 /* SeleccionarCategoriaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeleccionarCategoriaCell.swift; sourceTree = "<group>"; };
 		886FCBD1A68373E7BC25FFA1 /* Pods-TFMUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFMUITests.release.xcconfig"; path = "Target Support Files/Pods-TFMUITests/Pods-TFMUITests.release.xcconfig"; sourceTree = "<group>"; };
 		903651ACF10FB01630FAA602 /* Pods_TFM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9109E746232529CC000C312D /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = "/Users/clarisaangaramo/Documents/Xcode Projects/TFM/TFM/Controllers/MapController.swift"; sourceTree = "<absolute>"; };
 		910B49D122F37D2500187BC5 /* EditarPerfilController+ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EditarPerfilController+ImagePicker.swift"; sourceTree = "<group>"; };
 		910F214C22ECC700006B7232 /* TFM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		910F214F22ECC700006B7232 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				910F218722ECDE1D006B7232 /* ProductosController.swift */,
 				91D0862F231EF73500FA6372 /* FiltrosController.swift */,
 				914A32E222EDE129006169D5 /* DetailProductoController.swift */,
+				9109E746232529CC000C312D /* MapController.swift */,
 				910F218522ECDD5C006B7232 /* MiPerfilController.swift */,
 				91C5260C22F0EB2700205144 /* UsuarioController.swift */,
 				91B521F922F5EDFA00D620CF /* UsuarioController+CollectionView.swift */,
@@ -653,6 +656,7 @@
 				918938DC22F7620E00ED9F3F /* UsuarioProductos.swift in Sources */,
 				6C8853D4231D327400A9D485 /* SeleccionarCategoriaCell.swift in Sources */,
 				918D767022EE1FAA00C1DB7D /* SubirProductoController+ImagePicker.swift in Sources */,
+				9109E747232529CC000C312D /* MapController.swift in Sources */,
 				910F218C22ECE227006B7232 /* Usuario.swift in Sources */,
 				910F218022ECCFAC006B7232 /* RegistroController.swift in Sources */,
 				910F215022ECC700006B7232 /* AppDelegate.swift in Sources */,

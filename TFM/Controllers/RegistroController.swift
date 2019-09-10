@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 
-class RegistroController: ViewController{
+class RegistroController: ViewController, UITextFieldDelegate{
     
     @IBOutlet var nombreTextField:UITextField?
     @IBOutlet var contrasenaTextField:UITextField?
@@ -18,7 +18,70 @@ class RegistroController: ViewController{
     @IBOutlet var registroButton:UIButton?
     
     override func viewDidLoad(){
+        
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.backgroundColor = .clear
+        
         registroButton!.addTarget(self, action: #selector(registrarUsuario), for: .touchUpInside)
+        
+        self.hideKeyboardWhenTappedAround()
+        
+        nombreTextField?.delegate = self
+        emailTextField?.delegate = self
+        contrasenaTextField?.delegate = self
+        
+        let border_color = UIColor(rgb: 0xd3d3d3)
+        addBorder(textField: emailTextField!, border_color: border_color)
+        addBorder(textField: nombreTextField!, border_color: border_color)
+        addBorder(textField: contrasenaTextField!, border_color: border_color)
+    }
+    
+    /* Métodos */
+    func animateTextField(textField: UIView, up: Bool)
+    {
+        let movementDistance:CGFloat = -100
+        let movementDuration: Double = 0.3
+        
+        var movement:CGFloat = 0
+        if up
+        {
+            movement = movementDistance
+        }
+        else
+        {
+            movement = -movementDistance
+        }
+        UIView.beginAnimations("animateTextField", context: nil)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        UIView.setAnimationDuration(movementDuration)
+        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
+        UIView.commitAnimations()
+    }
+    
+    func addBorder(textField: UIView, border_color: UIColor){
+        let width = CGFloat(1.0)
+        let border = CALayer()
+        border.borderColor = border_color.cgColor
+        border.frame = CGRect(x: 0, y: textField.frame.size.height - width, width:  textField.frame.size.width, height: textField.frame.size.height)
+        border.borderWidth = width
+        textField.layer.addSublayer(border)
+        textField.layer.masksToBounds = true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        let border_color = UIColor(rgb: 0x5446D9)
+        addBorder(textField: textField, border_color: border_color)
+        self.animateTextField(textField: textField, up:true)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let border_color = UIColor(rgb: 0xd3d3d3)
+        addBorder(textField: textField, border_color: border_color)
+        self.animateTextField(textField: textField, up:false)
     }
     
     @objc func registrarUsuario(){

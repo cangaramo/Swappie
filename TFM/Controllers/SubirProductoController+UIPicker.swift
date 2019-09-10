@@ -41,8 +41,8 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         tallaTextField!.inputView = uiPicker
         tallaTextField!.inputAccessoryView = toolBar
         
-        condicionTextField!.inputView = uiPicker
-        condicionTextField!.inputAccessoryView = toolBar
+        estadoTextField!.inputView = uiPicker
+        estadoTextField!.inputAccessoryView = toolBar
         
     }
     
@@ -96,8 +96,8 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         if (tallaTextField!.isFirstResponder){
             tallaTextField!.text = salutations[row]
         }
-        else if (condicionTextField!.isFirstResponder){
-            condicionTextField!.text = estados[row]
+        else if (estadoTextField!.isFirstResponder){
+            estadoTextField!.text = estados[row]
         }
         
     }
@@ -108,8 +108,8 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         if (tallaTextField!.isFirstResponder){
             tallaTextField!.resignFirstResponder()
         }
-        else if (condicionTextField!.isFirstResponder){
-            condicionTextField!.resignFirstResponder()
+        else if (estadoTextField!.isFirstResponder){
+            estadoTextField!.resignFirstResponder()
         }
         
     }

@@ -19,9 +19,18 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
     @IBOutlet var descripcionContainer:UIView?
     @IBOutlet var generoTextField:UITextField?
     
+    @IBOutlet var navigationBar:UINavigationBar?
+    
     var usuario:Usuario?
     
     override func viewDidLoad() {
+        
+ 
+        self.navigationBar!.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationBar!.shadowImage = UIImage()
+        self.navigationBar!.isTranslucent = true
+        self.navigationBar!.backgroundColor = .clear
+        
         setViews()
         setUserData()
         setImagePicker()
@@ -42,6 +51,8 @@ class EditarPerfilController: ViewController, UITextViewDelegate, UITextFieldDel
         
         
         self.hideKeyboardWhenTappedAround()
+        
+        
         
         /*
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)

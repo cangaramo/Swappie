@@ -20,6 +20,7 @@ class DetailIntercambioController: UIViewController {
     @IBOutlet var collectionView2Height: NSLayoutConstraint?
     
     @IBOutlet var enviarButton: UIButton?
+    @IBOutlet var cancelarButton: UIButton?
     
     var sugerir:Bool = false
     var aceptado:Bool = false
@@ -56,7 +57,16 @@ class DetailIntercambioController: UIViewController {
                 self.aceptado = true
                 self.enviarButton?.setTitle("Aceptado", for: .normal)
                 self.enviarButton?.isEnabled = false
+                self.enviarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
                 
+            }
+            else if (estado == "Cancelado") {
+                self.cancelarButton?.setTitle("Cancelado", for: .normal)
+                self.cancelarButton?.isEnabled = false
+                self.cancelarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
+                self.cancelarButton?.setTitleColor(UIColor.white, for: .disabled)
+                self.enviarButton?.isEnabled = false
+                self.enviarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
             }
             else {
                 self.aceptado = false
@@ -271,6 +281,20 @@ class DetailIntercambioController: UIViewController {
         
         self.navigationController?.popViewController(animated: true)
         
+    }
+    
+    @IBAction func cancelarIntercambio(){
+        print ("Cancelar intercambio")
+        
+        /* Marcar el usuario actual como ACEPTADO */
+        let intercambioUsuario1 = Database.database().reference().child("usuarios-intercambios").child(self.usuario_self!).child(intercambioId!)
+        intercambioUsuario1.child("estado").setValue("Cancelado")
+        
+        
+        let intercambioUsuario2 = Database.database().reference().child("usuarios-intercambios").child(self.usuario_other!).child(intercambioId!)
+        intercambioUsuario2.child("estado").setValue("Cancelado")
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     func cambioRealizado(){

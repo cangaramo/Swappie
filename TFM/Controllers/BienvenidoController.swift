@@ -15,8 +15,15 @@ class BienvenidoController: ViewController{
     @IBOutlet var registrarseButton:UIButton?
     
     override func viewDidLoad(){
+        
+        
         iniciarSesionButton!.addTarget(self, action: #selector(irAIniciarSesion), for: .touchUpInside)
         registrarseButton!.addTarget(self, action: #selector(irARegistro), for: .touchUpInside)
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.backgroundColor = .clear
         
         checkIfUserIsLoggedIn()
     }
