@@ -18,6 +18,7 @@ class ProductoCell: UICollectionViewCell {
     @IBOutlet var borrarButton: UIButton?
     
     @IBOutlet var containerView: UIView?
+    @IBOutlet var checkImageView: UIImageView?
     
     var producto:Producto? {
         

@@ -10,8 +10,9 @@ import Foundation
 
 import UIKit
 import Firebase
+import MapKit
 
-class ProductosController: UIViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
+class ProductosController: UIViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, CLLocationManagerDelegate {
     
     @IBOutlet var collectionView:UICollectionView?
     private let itemsPerRow: CGFloat = 2
@@ -37,6 +38,11 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     //Filtros
     var talla_seccionada = ""
     var estados_seleccionados = [String]()
+    var distancia_seleccionada = 0
+    
+    let locationManager = CLLocationManager()
+    var latitud_producto = ""
+    var longitud_producto = ""
     
     override func viewDidLoad() {
         print("Productos")
@@ -66,6 +72,11 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         print (categoria_seleccionada)
         obtenerProductos()
         
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
         
     }
     
@@ -158,8 +169,17 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         })
     }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        latitud_producto = String(locValue.latitude)
+        longitud_producto = String(locValue.longitude)
+        
+    }
+    
     //Filter
-    func filterContentForSearchText(talla:String, estados:[String]) {
+    func filterContentForSearchText(talla:String, estados:[String], distancia:Int) {
         
         let buscar_productos = productos
         
@@ -193,20 +213,59 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
             })
         }
         
-        filteredProductos = filtroTallaProductos
+        
+        //Tercer filtro
+        print (distancia)
+        let distancia_busqueda = distancia
+        var currentLocation:CLLocation?
+        
+        //Ubicacion actual
+        if (latitud_producto != "" && longitud_producto != "" ){
+            let lat = Double(latitud_producto)
+            let lng = Double (longitud_producto)
+            currentLocation = CLLocation(latitude: lat!, longitude: lng!)
+        }
+        
+        var filtroUbicacionProductos = filtroTallaProductos
+        if (distancia_busqueda != 0 && currentLocation != nil){
+            filtroUbicacionProductos = filtroTallaProductos.filter(
+                { (producto:Producto) -> Bool in
+                    
+                    var match = false
+                    
+                    if (producto.latitud != "" && producto.longitud != "") {
+                        let lat = Double(producto.latitud!)!
+                        let lng = Double( producto.longitud!)!
+                        let location = CLLocation(latitude: lat, longitude: lng)
+                        
+                        let distance = currentLocation!.distance(from: location)
+                        
+                        let distance_km = distance/1000
+                        
+                        if (Int(distance_km) < distancia_busqueda) {
+                            match = true
+                        }
+                    }
+                    
+                    return match
+            })
+        }
+        
+        filteredProductos = filtroUbicacionProductos
         
         filtering = true
         self.collectionView!.reloadData()
     }
     
-    func devolverFiltros(talla:String, estados:[String]){
+    func devolverFiltros(talla:String, estados:[String], distancia:Int){
 
         self.talla_seccionada = talla
         self.estados_seleccionados = estados
+        self.distancia_seleccionada = distancia
         
-        if (!talla.isEmpty || !estados.isEmpty){
+        if (!talla.isEmpty || !estados.isEmpty || distancia != 0){
             print ("Filtrar")
-            filterContentForSearchText(talla:talla, estados:estados)
+            filterContentForSearchText(talla:talla, estados:estados, distancia: distancia)
         }
         else {
             filtering = false

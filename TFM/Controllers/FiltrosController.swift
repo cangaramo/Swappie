@@ -12,6 +12,7 @@ import UIKit
 class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     @IBOutlet var tallaTextField:UITextField?
+    @IBOutlet var distanciaLabel:UILabel?
     
     var uiPicker : UIPickerView!
     
@@ -21,12 +22,14 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     let estados = ["Sin estrenar", "Apenas usado", "En muy buen estado", "Bastante usado"]
     var estados_seleccionados = [String]()
     
+    var distancia_seleccionada = 10
+    
     @IBOutlet var estado1:UIView?
     @IBOutlet var estado2:UIView?
     @IBOutlet var estado3:UIView?
     @IBOutlet var estado4:UIView?
     
-    var devolverFiltros : ( (String, [String]) -> Void)?
+    var devolverFiltros : ( (String, [String], Int) -> Void)?
     
     
     override func viewDidLoad() {
@@ -145,6 +148,15 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         textField.layer.masksToBounds = true
     }
     
+    /* Slider */
+    
+    @IBAction func sliderValueChanged(_ sender: UISlider) {
+        let currentValue = Int(sender.value)
+        distanciaLabel!.text = "\(currentValue)" + " km"
+        
+        distancia_seleccionada = currentValue
+    }
+    
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var label = UILabel()
         if let v = view {
@@ -193,7 +205,8 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     
     
     @IBAction func filtrosDone(){
-        self.devolverFiltros!(talla_seccionada, estados_seleccionados)
+        print (distancia_seleccionada)
+        self.devolverFiltros!(talla_seccionada, estados_seleccionados, distancia_seleccionada)
         self.navigationController?.popViewController(animated: true)
     }
 }

@@ -108,12 +108,14 @@ class AnyadirProductosController:UIViewController, UICollectionViewDelegateFlowL
         if (seleccionado) {
           //  cell.layer.borderWidth = 2
            // cell.layer.borderColor = UIColor(rgb: 0xEA9085).cgColor
-             cell.containerView!.layer.borderColor = UIColor(rgb: 0xf45b55).cgColor
+            cell.containerView!.layer.borderColor = UIColor(rgb: 0xf45b55).cgColor
+            cell.checkImageView?.isHidden = false
         }
         else {
            // cell.layer.borderWidth = 2
            // cell.layer.borderColor = UIColor.white.cgColor
             cell.containerView!.layer.borderColor = UIColor.white.cgColor
+            cell.checkImageView?.isHidden = true
         }
     
         return cell
@@ -146,6 +148,7 @@ class AnyadirProductosController:UIViewController, UICollectionViewDelegateFlowL
            // cell.layer.borderWidth = 2
            // cell.layer.borderColor = UIColor.white.cgColor
             cell.containerView!.layer.borderColor = UIColor.white.cgColor
+            cell.checkImageView?.isHidden = true
             productos_seleccionados.remove(at: selected_index)
             
         }
@@ -154,6 +157,7 @@ class AnyadirProductosController:UIViewController, UICollectionViewDelegateFlowL
            // cell.layer.borderWidth = 2
            // cell.layer.borderColor = UIColor(rgb: 0xEA9085).cgColor
             cell.containerView!.layer.borderColor = UIColor(rgb: 0xf45b55).cgColor
+            cell.checkImageView?.isHidden = false
             productos_seleccionados.append(producto)
         }
     }
