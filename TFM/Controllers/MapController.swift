@@ -22,39 +22,20 @@ class MapController: UIViewController {
         super.viewDidLoad()
         
         checkLocationServices()
-        showItem()
-        
-        //fetchStadiumsOnMap()
-        
+        mostrarPin()
         mapView!.delegate = self
-        
-
     }
     
-    func showItem (){
-        // 1
-        /*
-        let location = CLLocationCoordinate2D(latitude: 51.60154930320717,
-                                              longitude: -0.10170358233163292) */
-        
+    func mostrarPin (){
         let location = CLLocationCoordinate2D(latitude: producto_latitud!,
                                               longitude: producto_longitud!)
         
-        // 2
         let span = MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
         let region = MKCoordinateRegion(center: location, span: span)
         mapView!.setRegion(region, animated: true)
         
-        //3
-        /*
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = location
-        annotation.title = "Big Ben"
-        annotation.subtitle = "London"
-        mapView!.addAnnotation(annotation) */
-        
         let radius:CLLocationDistance = 500
-        showCircle(coordinate: location,
+        mostrarCirculo(coordinate: location,
                    radius: radius)
     }
     
@@ -83,8 +64,8 @@ class MapController: UIViewController {
 
     }
     
-    // Radius is measured in meters
-    func showCircle(coordinate: CLLocationCoordinate2D,
+    //Mostrar circulo
+    func mostrarCirculo(coordinate: CLLocationCoordinate2D,
                     radius: CLLocationDistance) {
         let circle = MKCircle(center: coordinate,
                               radius: radius)
@@ -93,24 +74,17 @@ class MapController: UIViewController {
 
 }
 
+// Dibujar Circulo
 extension MapController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView,
                  rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        // If you want to include other shapes, then this check is needed.
-        // If you only want circles, then remove it.
          let circleOverlay = overlay as? MKCircle
-            
-            
+        
         let circleRenderer = MKCircleRenderer(overlay: circleOverlay!)
         let purple = UIColor(rgb:0x5446d9)
             circleRenderer.fillColor = purple
             circleRenderer.alpha = 0.1
             
             return circleRenderer
-        
-        
-        
-        
-        // If other shapes are required, handle them here
     }
 }

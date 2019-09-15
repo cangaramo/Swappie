@@ -41,8 +41,8 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     var distancia_seleccionada = 0
     
     let locationManager = CLLocationManager()
-    var latitud_producto = ""
-    var longitud_producto = ""
+    var latitud_usuario = ""
+    var longitud_usuario = ""
     
     override func viewDidLoad() {
         print("Productos")
@@ -72,12 +72,48 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         print (categoria_seleccionada)
         obtenerProductos()
         
+        checkLocationServices()
+        
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
         }
         
+    }
+    
+    func checkLocationServices() {
+        if CLLocationManager.locationServicesEnabled() {
+            checkLocationAuthorization()
+        } else {
+            // Show alert letting the user know they have to turn this on.
+        }
+    }
+    
+    func checkLocationAuthorization() {
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedWhenInUse:
+            break
+        case .denied:
+            //Mostrar alerta para activar permisos
+            mostrarMensaje()
+            break
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
+        case .restricted: // Show an alert letting them know what’s up
+            break
+        case .authorizedAlways:
+            break
+        }
+        
+    }
+    
+    func mostrarMensaje(){
+        let alertController = UIAlertController(title: "Es necesario activar permisos de Localización", message:
+            "Se necesitan permisos de Localización para buscar productos cerca de ti", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Aceptar", style: .default))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     //Start search
@@ -173,8 +209,8 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         
-        latitud_producto = String(locValue.latitude)
-        longitud_producto = String(locValue.longitude)
+        latitud_usuario = String(locValue.latitude)
+        longitud_usuario = String(locValue.longitude)
         
     }
     
@@ -191,9 +227,13 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
                     
                     var match = false
                     for estado in estados {
-                        if ( producto.estado! == estado ){
-                            match = true
+                        
+                        if (producto.estado != nil) {
+                            if ( producto.estado! == estado ){
+                                match = true
+                            }
                         }
+                        
                     }
                     return match
             })
@@ -220,9 +260,9 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         var currentLocation:CLLocation?
         
         //Ubicacion actual
-        if (latitud_producto != "" && longitud_producto != "" ){
-            let lat = Double(latitud_producto)
-            let lng = Double (longitud_producto)
+        if (latitud_usuario != "" && longitud_usuario != "" ){
+            let lat = Double(latitud_usuario)
+            let lng = Double (longitud_usuario)
             currentLocation = CLLocation(latitude: lat!, longitude: lng!)
         }
         
@@ -264,8 +304,14 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         self.distancia_seleccionada = distancia
         
         if (!talla.isEmpty || !estados.isEmpty || distancia != 0){
-            print ("Filtrar")
-            filterContentForSearchText(talla:talla, estados:estados, distancia: distancia)
+            
+            if (latitud_usuario == "" || longitud_usuario == ""){
+              filterContentForSearchText(talla:talla, estados:estados, distancia: 0)
+            }
+            else {
+                filterContentForSearchText(talla:talla, estados:estados, distancia: distancia)
+            }
+            
         }
         else {
             filtering = false
@@ -323,12 +369,16 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        //Pasar producto
+        var producto = productos[indexPath.item]
+        
+        if (filtering){
+            producto = filteredProductos[indexPath.item]
+        }
+        
         //Detail Producto Controller
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let detailProductoController = storyboard.instantiateViewController(withIdentifier: "detailProductoController") as! DetailProductoController
-        
-        //Pasar producto
-        let producto = productos[indexPath.item]
         detailProductoController.producto = producto
         navigationController?.pushViewController(detailProductoController,animated: true)
     }

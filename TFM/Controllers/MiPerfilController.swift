@@ -48,21 +48,19 @@ class MiPerfilController: UIViewController {
     }
     
     override func viewDidLoad() {
-        print("Welcome")
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
     
+    //Ver Perfil
     @IBAction func verPerfil(){
-        print ("Ver perfil")
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let usuarioController = storyboard.instantiateViewController(withIdentifier: "usuarioController") as! UsuarioController
         usuarioController.usuario = usuario
         navigationController?.pushViewController(usuarioController,animated: true)
     }
     
+    //Cerrar sesion
     @IBAction func cerrarSesion(){
-        print ("Cerrar sesion")
         
         do {
             try Auth.auth().signOut()
@@ -73,20 +71,14 @@ class MiPerfilController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    
+    //Editar Perfil
     @IBAction func editarPerfil(){
-        print ("editar perfil")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
         
         if let editarPerfil = (storyboard.instantiateViewController(withIdentifier: "editarPerfil") as? EditarPerfilController) {
             editarPerfil.usuario = usuario
             self.present(editarPerfil, animated: true, completion: nil)
         }
-        /*
-        let usuarioController = storyboard.instantiateViewController(withIdentifier: "editarPerfil") as! EditarPerfilController
-        usuarioController.usuario = usuario
-        navigationController?.pushViewController(usuarioController,animated: true)*/
         
     }
     

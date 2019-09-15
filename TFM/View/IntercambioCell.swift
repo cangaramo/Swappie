@@ -25,13 +25,13 @@ class IntercambioCell: UITableViewCell {
             
             print ("intercambiooooo")
             print (intercambio!.estado!)
-            if (intercambio!.estado! == "Aceptado"){
+            if (intercambio!.estado! == "Aceptado" || intercambio!.estado! == "Realizado"){
                 self.estadoLabel?.superview!.backgroundColor = UIColor(rgb:0x5446d9)
             }
-            if (intercambio!.estado! == "Cancelado"){
+            else if (intercambio!.estado! == "Cancelado"){
                 self.estadoLabel?.superview!.backgroundColor = UIColor(rgb:0xf45b55)
             }
-            if (intercambio!.estado! == "Pendiente") {
+            else if (intercambio!.estado! == "Pendiente") {
                 self.estadoLabel?.superview!.superview!.backgroundColor = UIColor(rgb:0xd5d3f2)
             }
             

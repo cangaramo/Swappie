@@ -13,21 +13,19 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     
     @IBOutlet var tallaTextField:UITextField?
     @IBOutlet var distanciaLabel:UILabel?
-    
     var uiPicker : UIPickerView!
+    @IBOutlet var estado1:UIView?
+    @IBOutlet var estado2:UIView?
+    @IBOutlet var estado3:UIView?
+    @IBOutlet var estado4:UIView?
     
-    let salutations = ["", "XXS", "XS", "S", "M", "L", "XL", "XXL"]
+    let tallas = ["", "XXS", "XS", "S", "M", "L", "XL", "XXL"]
     var talla_seccionada = ""
     
     let estados = ["Sin estrenar", "Apenas usado", "En muy buen estado", "Bastante usado"]
     var estados_seleccionados = [String]()
     
     var distancia_seleccionada = 10
-    
-    @IBOutlet var estado1:UIView?
-    @IBOutlet var estado2:UIView?
-    @IBOutlet var estado3:UIView?
-    @IBOutlet var estado4:UIView?
     
     var devolverFiltros : ( (String, [String], Int) -> Void)?
     
@@ -61,23 +59,21 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         
         setUIPicker()
     
-        // 3. add action to myView
-       // let gesture = UITapGestureRecognizer(target: self, action: Selector("someAction:"))
-        estado1!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("someAction:"))))
-        estado2!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("someAction:"))))
-        estado3!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("someAction:"))))
-        estado4!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("someAction:"))))
+        //Añadir Gesture Recognizer
+        estado1!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("seleccionarEstado:"))))
+        estado2!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("seleccionarEstado:"))))
+        estado3!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("seleccionarEstado:"))))
+        estado4!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector(("seleccionarEstado:"))))
     }
     
     
-    // or for Swift 4
-    @objc func someAction(_ sender:UITapGestureRecognizer){
+    //Checkboxes - Estado
+    @objc func seleccionarEstado(_ sender:UITapGestureRecognizer){
         let container_view = sender.view
         let checkboxes = container_view!.subviews.compactMap { $0 as? UIView }
         let checkbox = checkboxes[0]
 
         let tag = checkbox.tag
-        print ("tap")
         let estado_selected = estados[tag-1]
         
         //Comprobar si ya esta en el array
@@ -103,10 +99,19 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
             checkbox.backgroundColor = UIColor(rgb:0x5446D9)
         }
         
-        print (estados_seleccionados)
-        
     }
     
+    /* Slider - Distancia */
+    
+    @IBAction func sliderValueChanged(_ sender: UISlider) {
+        let currentValue = Int(sender.value)
+        distanciaLabel!.text = "\(currentValue)" + " km"
+        
+        distancia_seleccionada = currentValue
+    }
+    
+    
+    /* UIPicker - Tallas */
     func setUIPicker() {
         
         /*  Configurar picker */
@@ -124,7 +129,7 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         toolBar.barTintColor = UIColor.white
         toolBar.sizeToFit()
         
-        /* Actions */
+        /* Acciones */
         let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.plain, target: self, action: Selector(("donePicker")))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItem.Style.plain, target: self, action: Selector(("donePicker")))
@@ -148,14 +153,6 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         textField.layer.masksToBounds = true
     }
     
-    /* Slider */
-    
-    @IBAction func sliderValueChanged(_ sender: UISlider) {
-        let currentValue = Int(sender.value)
-        distanciaLabel!.text = "\(currentValue)" + " km"
-        
-        distancia_seleccionada = currentValue
-    }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var label = UILabel()
@@ -167,10 +164,10 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         label.textAlignment = .center
         
         if (tallaTextField!.isFirstResponder){
-            label.text =  salutations[row]
+            label.text =  tallas[row]
         }
         
-        talla_seccionada = salutations[row]
+        talla_seccionada = tallas[row]
      
         return label
     }
@@ -183,16 +180,16 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         
-        return salutations.count
+        return tallas.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
-        return salutations[row]
+        return tallas[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        tallaTextField!.text = salutations[row]
+        tallaTextField!.text = tallas[row]
     }
     
     /* Action done */

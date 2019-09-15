@@ -14,6 +14,7 @@ class IniciarSesionController: ViewController, UITextFieldDelegate{
     @IBOutlet var emailTextField:UITextField?
     @IBOutlet var contrasenaTextField:UITextField?
     @IBOutlet var inicioSesionButton:UIButton?
+    @IBOutlet var mensajeError:UILabel?
     
     override func viewDidLoad(){
         
@@ -32,6 +33,9 @@ class IniciarSesionController: ViewController, UITextFieldDelegate{
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: emailTextField!, border_color: border_color)
         addBorder(textField: contrasenaTextField!, border_color: border_color)
+        
+        emailTextField!.tag = 1
+        contrasenaTextField!.tag = 2
     }
     
     /* Métodos */
@@ -79,10 +83,27 @@ class IniciarSesionController: ViewController, UITextFieldDelegate{
         self.animateTextField(textField: textField, up:false)
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        switch (textField.tag){
+        case 1:
+            contrasenaTextField?.becomeFirstResponder()
+            break
+        case 2:
+            textField.resignFirstResponder()
+            break
+        default:
+            textField.resignFirstResponder()
+        }
+        
+        // Do not add a line break
+        return false
+    }
+    
     @objc func iniciarSesion(){
         
         guard let email = emailTextField!.text, let contrasena = contrasenaTextField!.text else {
-            print("Form is not valid")
+            self.mensajeError?.text = "Introduce usuario y contraseña"
             return
         }
         
@@ -90,11 +111,11 @@ class IniciarSesionController: ViewController, UITextFieldDelegate{
             
             if let error = error {
                 print(error)
+                self.mensajeError?.text = "Error o contraseña no válidos"
                 return
             }
-            //successfully logged in our user
             
-            //Mostrar menu
+            //Inicio de sesion -> Mostrar menu
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let tabMenu = (storyboard.instantiateViewController(withIdentifier: "tabMenu") as? UITabBarController) {
                 self.present(tabMenu, animated: true, completion: nil)

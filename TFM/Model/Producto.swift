@@ -23,6 +23,7 @@ class Producto: NSObject {
     var imagen3: String?
     var usuario: String?
     var id: String?
+    var intercambiado: Int?
     
     init(dictionary: [AnyHashable: Any]) {
         self.titulo = dictionary["titulo"] as? String
@@ -38,5 +39,6 @@ class Producto: NSObject {
         self.imagen2 = dictionary["imagen2"] as? String
         self.imagen3 = dictionary["imagen3"] as? String
         self.usuario = dictionary["usuario"] as? String
+        self.intercambiado = dictionary["intercambiado"] as? Int
     }
 }

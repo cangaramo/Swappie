@@ -12,8 +12,7 @@ import Firebase
 import MapKit
 import CoreLocation
 
-class SubirProductoController: UIViewController, UITextViewDelegate, UITextFieldDelegate,
-CLLocationManagerDelegate {
+class SubirProductoController: UIViewController, CLLocationManagerDelegate {
     
     @IBOutlet var tituloTextField:UITextField?
     @IBOutlet var descripcionTexView:UITextView?
@@ -26,6 +25,7 @@ CLLocationManagerDelegate {
     @IBOutlet var previewImage1:UIImageView?
     @IBOutlet var previewImage2:UIImageView?
     @IBOutlet var previewImage3:UIImageView?
+    @IBOutlet var errorMensaje:UILabel?
     
     var uiPicker : UIPickerView!
 
@@ -52,9 +52,15 @@ CLLocationManagerDelegate {
         
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         
-        setViews()
         setUIPicker()
         setImagePickers()
+        
+        self.hideKeyboardWhenTappedAround()
+        
+        //Description Text View
+        descripcionTexView!.delegate = self
+        descripcionTexView?.text = "Añade una descripción"
+        descripcionTexView!.textColor = UIColor.lightGray
         
         tituloTextField?.delegate = self
         marcaTextField?.delegate = self
@@ -78,15 +84,14 @@ CLLocationManagerDelegate {
         addBorder(textField: descripcionContainer!, border_color: border_color)
         
         
-        self.hideKeyboardWhenTappedAround()
-        
-        /* Subir producto */
+        // Subir producto
         subirProductoButton!.addTarget(self, action: #selector(subirProducto), for: .touchUpInside)
         
-        self.locationManager.requestAlwaysAuthorization()
+        // Localizacion
         
-        // For use in foreground
-        self.locationManager.requestWhenInUseAuthorization()
+       // self.locationManager.requestAlwaysAuthorization()
+        // self.locationManager.requestWhenInUseAuthorization()
+        checkLocationServices()
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
@@ -95,6 +100,7 @@ CLLocationManagerDelegate {
         }
 
     }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         print("locations = \(locValue.latitude) \(locValue.longitude)")
@@ -103,57 +109,46 @@ CLLocationManagerDelegate {
         longitud_producto = String(locValue.longitude)
     }
     
-    /* Métodos */
-    func animateTextField(textField: UIView, up: Bool)
-    {
-        let movementDistance:CGFloat = -100
-        let movementDuration: Double = 0.3
-        
-        var movement:CGFloat = 0
-        if up
-        {
-            movement = movementDistance
+    func checkLocationServices() {
+        if CLLocationManager.locationServicesEnabled() {
+            checkLocationAuthorization()
+        } else {
+            // Show alert letting the user know they have to turn this on.
         }
-        else
-        {
-            movement = -movementDistance
-        }
-        UIView.beginAnimations("animateTextField", context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration)
-        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
-        UIView.commitAnimations()
     }
     
-    func addBorder(textField: UIView, border_color: UIColor){
-        let width = CGFloat(1.0)
-        let border = CALayer()
-        border.borderColor = border_color.cgColor
-        border.frame = CGRect(x: 0, y: textField.frame.size.height - width, width:  textField.frame.size.width, height: textField.frame.size.height)
-        border.borderWidth = width
-        textField.layer.addSublayer(border)
-        textField.layer.masksToBounds = true
-    }
-    
-    /* Text fields */
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-        if (textField.tag == 3 ) {
-            
-            textField.resignFirstResponder()
-            
-           seleccionarCategoria()
-        }
-        else {
-            let border_color = UIColor(rgb: 0x5446D9)
-            addBorder(textField: textField, border_color: border_color)
-            self.animateTextField(textField: textField, up:true)
+    func checkLocationAuthorization() {
+        switch CLLocationManager.authorizationStatus() {
+            case .authorizedWhenInUse:
+                break
+            case .denied:
+                //Mostrar alerta para activar permisos
+                subirProductoButton?.isEnabled = false
+                subirProductoButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
+                mostrarMensaje()
+                break
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+                locationManager.requestAlwaysAuthorization()
+            case .restricted: // Show an alert letting them know what’s up
+                break
+            case .authorizedAlways:
+                break
         }
         
     }
     
+    func mostrarMensaje(){
+        let alertController = UIAlertController(title: "Es necesario activar permisos de Localización", message:
+            "Se necesitan permisos de Localización para publicar un producto", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Aceptar", style: .default))
+        self.present(alertController, animated: true, completion: nil)
+    }
     
-    /* Obtener los productos seleccionados */
+    
+    /* CATEGORIAS*/
+    
+    // Obtener los productos seleccionados
     func seleccionarCategoria(categoria_id:String, categoria_nombre:String, genero: String){
 
         //Genero
@@ -168,90 +163,14 @@ CLLocationManagerDelegate {
             categoriaTextField!.text = categoria_nombre
             self.categoriaId = categoria_id
         }
-        
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
-        let border_color = UIColor(rgb: 0xd3d3d3)
-        addBorder(textField: textField, border_color: border_color)
-        
-        self.animateTextField(textField: textField, up:false)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        switch (textField.tag){
-        case 0:
-            descripcionTexView?.becomeFirstResponder()
-            break
-        case 1:
-            marcaTextField?.becomeFirstResponder()
-            break
-        case 2:
-            //categoriaTextField?.becomeFirstResponder()
-            textField.resignFirstResponder()
-            seleccionarCategoria()
-            break
-        case 3:
-            tallaTextField?.becomeFirstResponder()
-            break
-        default:
-             textField.resignFirstResponder()
-        }
-        
-        // Do not add a line break
-        return false
-    }
-    
-    func seleccionarCategoria(){
+    // Ir a Categorias Controller
+    func irACategorias(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let seleccionarCategoriaController = storyboard.instantiateViewController(withIdentifier: "seleccionarCategoriaController") as! SeleccionarCategoriaController
         seleccionarCategoriaController.seleccionarCategoria = self.seleccionarCategoria
         navigationController?.pushViewController(seleccionarCategoriaController,animated: true)
-    }
-    
-    func setViews(){
-        descripcionTexView!.delegate = self
-        descripcionTexView?.text = "Añade una descripción"
-        descripcionTexView!.textColor = UIColor.lightGray
-    }
-    
-    /* Text view */
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        /*
-        if descripcionTexView!.textColor == UIColor.lightGray {
-            descripcionTexView!.text = nil
-            descripcionTexView!.textColor = UIColor.black
-        }*/
-        
-        let border_color = UIColor(rgb: 0x5446D9)
-        addBorder(textField: textView.superview!, border_color: border_color)
-        
-        if descripcionTexView!.textColor == UIColor.lightGray {
-            descripcionTexView!.text = nil
-            descripcionTexView!.textColor = UIColor.black
-        }
-        
-        self.animateTextField(textField: textView, up:true)
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        /*
-        if descripcionTexView!.text.isEmpty {
-            descripcionTexView!.text = "Añade una descripción"
-            descripcionTexView!.textColor = UIColor.lightGray
-        }*/
-        
-        let border_color = UIColor(rgb: 0xd3d3d3)
-        addBorder(textField: textView.superview!, border_color: border_color)
-        
-        if descripcionTexView!.text.isEmpty {
-            descripcionTexView!.text = "Añade una descripción"
-            descripcionTexView!.textColor = UIColor.lightGray
-        }
-        
-        self.animateTextField(textField: textView, up:false)
     }
     
 
@@ -323,52 +242,61 @@ CLLocationManagerDelegate {
             let talla = tallaTextField!.text,
             let estado = estadoTextField!.text
         else {
-                print("Form is not valid")
-                return
+            print("Form is not valid")
+            return
         }
         
-        //Estado
-    
-        //FIREBASE
-        let ref = Database.database().reference().child("productos")
-        let childRef = ref.childByAutoId()
         
-        //Usuario ID
-        let user_id = Auth.auth().currentUser!.uid
-        
-        //Producto valores
-        let values = ["titulo": titulo,
-                      "descripcion": descripcion,
-                      "marca": marca,
-                      "talla": talla,
-                      "usuario": user_id,
-                      "genero" : genero,
-                      "categoria": categoriaId,
-                      "latitud": latitud_producto,
-                      "longitud": longitud_producto,
-                      "estado": estado,
-                      "imagen1": image1,
-                      "imagen2": image2,
-                      "imagen3": image3,] as [String : Any]
-        
-        //Anyadir primero a PRODUCTOS
-        childRef.updateChildValues(values) { (error, ref) in
-            if error != nil {
-                print(error ?? "")
-                return
+        if (titulo != "" && descripcion != "" && marca != "" && talla != "" && estado != ""){
+            
+            //FIREBASE
+            let ref = Database.database().reference().child("productos")
+            let childRef = ref.childByAutoId()
+            
+            //Usuario ID
+            let user_id = Auth.auth().currentUser!.uid
+            
+            //Producto valores
+            let values = ["titulo": titulo,
+                          "descripcion": descripcion,
+                          "marca": marca,
+                          "talla": talla,
+                          "usuario": user_id,
+                          "genero" : genero,
+                          "categoria": categoriaId,
+                          "latitud": latitud_producto,
+                          "longitud": longitud_producto,
+                          "estado": estado,
+                          "intercambiado": 0,
+                          "imagen1": image1,
+                          "imagen2": image2,
+                          "imagen3": image3,] as [String : Any]
+            
+            //Anyadir primero a PRODUCTOS
+            childRef.updateChildValues(values) { (error, ref) in
+                if error != nil {
+                    print(error ?? "")
+                    return
+                }
+                
+                //Producto ID
+                guard let productoId = childRef.key else { return }
+                
+                //Anyadir a USER-PRODUCTS
+                let userProductsRef = Database.database().reference().child("usuario-productos").child(user_id).child(productoId)
+                userProductsRef.setValue(1)
+                
+                //self.tabBarController!.selectedIndex = 0
+                Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.cerrarTab), userInfo: nil, repeats: false)
+                
             }
-            
-            //Producto ID
-            guard let productoId = childRef.key else { return }
-            
-            //Anyadir a USER-PRODUCTS
-            let userProductsRef = Database.database().reference().child("usuario-productos").child(user_id).child(productoId)
-            userProductsRef.setValue(1)
-            
-            //self.tabBarController!.selectedIndex = 0
-            Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.cerrarTab), userInfo: nil, repeats: false)
-            
         }
+        else {
+            print ("Form is not valid")
+            errorMensaje!.text = "Completa todos los campos"
+        }
+    
+       
     }
     
     /* DISMISS */

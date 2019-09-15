@@ -70,6 +70,7 @@
 		91C5260B22F0EA3500205144 /* EditarPerfilController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C5260A22F0EA3500205144 /* EditarPerfilController.swift */; };
 		91C5260D22F0EB2700205144 /* UsuarioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C5260C22F0EB2700205144 /* UsuarioController.swift */; };
 		91D08630231EF73500FA6372 /* FiltrosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D0862F231EF73500FA6372 /* FiltrosController.swift */; };
+		91D090CF232E801B00765F7A /* SubirProducto+TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D090CE232E801B00765F7A /* SubirProducto+TextField.swift */; };
 		91DF5C4C22F8BBE600BB2F4D /* IntercambiosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DF5C4B22F8BBE600BB2F4D /* IntercambiosController.swift */; };
 		91EB4F8522FA057F0012259C /* Intercambio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EB4F8422FA057F0012259C /* Intercambio.swift */; };
 		91EB4F8722FA06560012259C /* IntercambioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EB4F8622FA06560012259C /* IntercambioCell.swift */; };
@@ -167,6 +168,7 @@
 		91C5260A22F0EA3500205144 /* EditarPerfilController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditarPerfilController.swift; sourceTree = "<group>"; };
 		91C5260C22F0EB2700205144 /* UsuarioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsuarioController.swift; sourceTree = "<group>"; };
 		91D0862F231EF73500FA6372 /* FiltrosController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltrosController.swift; sourceTree = "<group>"; };
+		91D090CE232E801B00765F7A /* SubirProducto+TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SubirProducto+TextField.swift"; sourceTree = "<group>"; };
 		91DF5C4B22F8BBE600BB2F4D /* IntercambiosController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntercambiosController.swift; sourceTree = "<group>"; };
 		91EB4F8422FA057F0012259C /* Intercambio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intercambio.swift; sourceTree = "<group>"; };
 		91EB4F8622FA06560012259C /* IntercambioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntercambioCell.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				91C5260A22F0EA3500205144 /* EditarPerfilController.swift */,
 				910B49D122F37D2500187BC5 /* EditarPerfilController+ImagePicker.swift */,
 				910F218F22ED02B5006B7232 /* SubirProductoController.swift */,
+				91D090CE232E801B00765F7A /* SubirProducto+TextField.swift */,
 				918D766F22EE1FAA00C1DB7D /* SubirProductoController+ImagePicker.swift */,
 				918D766D22EE1E8000C1DB7D /* SubirProductoController+UIPicker.swift */,
 				6C8853D1231D2DB500A9D485 /* SeleccionarCategoriaController.swift */,
@@ -647,6 +650,7 @@
 				918938D422F6F4E500ED9F3F /* PerfilHeader.swift in Sources */,
 				913A309922FCACC20059ACB2 /* MensajesController.swift in Sources */,
 				913A309F22FCB9C40059ACB2 /* ChatController+CollectionView.swift in Sources */,
+				91D090CF232E801B00765F7A /* SubirProducto+TextField.swift in Sources */,
 				910F215222ECC700006B7232 /* ViewController.swift in Sources */,
 				91DF5C4C22F8BBE600BB2F4D /* IntercambiosController.swift in Sources */,
 				918D766922EDF5D500C1DB7D /* ProductoCell.swift in Sources */,

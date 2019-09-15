@@ -69,6 +69,14 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDele
         
         cell.producto = producto
         
+        if (producto.intercambiado == 0){
+            cell.intercambiadoView?.isHidden = true
+        }
+        else {
+            cell.intercambiadoView?.isHidden = false
+        }
+        
+        
         return cell
     }
     

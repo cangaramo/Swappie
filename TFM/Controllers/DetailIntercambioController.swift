@@ -24,6 +24,7 @@ class DetailIntercambioController: UIViewController {
     
     var sugerir:Bool = false
     var aceptado:Bool = false
+    var realizado:Bool = false
 
     var intercambioId:String?
     
@@ -55,9 +56,10 @@ class DetailIntercambioController: UIViewController {
             let estado = value!["estado"] as! String
             if (estado == "Aceptado") {
                 self.aceptado = true
-                self.enviarButton?.setTitle("Aceptado", for: .normal)
-                self.enviarButton?.isEnabled = false
-                self.enviarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
+                self.enviarButton?.setTitle("Intercambio realizado", for: .normal)
+                self.cancelarButton?.isEnabled = false
+                self.cancelarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
+                self.cancelarButton?.setTitleColor(UIColor.white, for: .disabled)
                 
             }
             else if (estado == "Cancelado") {
@@ -66,6 +68,14 @@ class DetailIntercambioController: UIViewController {
                 self.cancelarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
                 self.cancelarButton?.setTitleColor(UIColor.white, for: .disabled)
                 self.enviarButton?.isEnabled = false
+                self.enviarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
+            }
+            else if (estado == "Realizado"){
+                self.cancelarButton?.isEnabled = false
+                self.cancelarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
+                self.cancelarButton?.setTitleColor(UIColor.white, for: .disabled)
+                self.enviarButton?.isEnabled = false
+                self.enviarButton?.setTitle("Realizado", for: .normal)
                 self.enviarButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
             }
             else {
@@ -154,6 +164,36 @@ class DetailIntercambioController: UIViewController {
         })
     }
     
+    func marcarComoVendido(){
+        
+        let productos = Database.database().reference().child("productos")
+        
+        productos.observe(.childAdded, with: { (snapshot) in
+            
+            let producto_id = snapshot.key
+            
+            var vendido = false
+            
+            for producto_self in self.productos_self {
+                if (producto_self.id == producto_id){
+                    vendido = true
+                }
+            }
+            
+            for producto_other in self.productos_other {
+                if (producto_other.id == producto_id){
+                    vendido = true
+                }
+            }
+            
+            if (vendido) {
+                let productoReference = productos.child(producto_id)
+                productoReference.child("intercambiado").setValue(1)
+            }
+            
+        })
+    }
+    
     @objc func seeProductosSelf(){
         self.handleReloadTable2()
         actualizarConstraints()
@@ -229,8 +269,22 @@ class DetailIntercambioController: UIViewController {
     /* Actualizar Firebase DB */
     @IBAction func actualizarIntercambio(){
        
+        
+        //Marcar como realizado
+        if (aceptado) {
+            /* Marcar el usuario actual como REALIZADO */
+            let intercambioUsuario1 = Database.database().reference().child("usuarios-intercambios").child(self.usuario_self!).child(intercambioId!)
+            intercambioUsuario1.child("estado").setValue("Realizado")
+            
+            
+            let intercambioUsuario2 = Database.database().reference().child("usuarios-intercambios").child(self.usuario_other!).child(intercambioId!)
+            intercambioUsuario2.child("estado").setValue("Realizado")
+            
+            marcarComoVendido()
+        }
+        
         /* Sugerir intercambio */
-        if (sugerir){
+        else if (sugerir){
             let refIntercambio = Database.database().reference().child("intercambios").child(intercambioId!)
             
             /* Otro usuario */

@@ -22,15 +22,9 @@ class UsuarioController: ViewController {
     
     var headerHeight:CGFloat = 200
     
-    var usuario:Usuario? {
-        
-        didSet{
-        }
-    }
+    var usuario:Usuario? 
     
     override func viewDidLoad() {
-        print("Welcome")
-        
         self.navigationController?.toolbar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         
@@ -40,8 +34,10 @@ class UsuarioController: ViewController {
        
         
         obtenerProductos()
-
-     
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        collectionView?.reloadData()
     }
     
     func obtenerProductos() {
@@ -53,7 +49,7 @@ class UsuarioController: ViewController {
         //Loop producto
         ref.observe(.childAdded, with: { (snapshot) in
             
-            //Cogemos el producto id y loop en Productos
+            //Cogemos el producto id
             let messageId = snapshot.key
             
             let messagesReference = Database.database().reference().child("productos").child(messageId)
@@ -68,15 +64,13 @@ class UsuarioController: ViewController {
                     producto.id = snapshot.key
                     self.productos.append(producto)
                     
-                    self.handleReloadTable()
-                    
                     //Background thread
-                    /*
+                    
                      self.timer?.invalidate()
                      print("we just canceled our timer")
                      
-                     self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-                     print("schedule a table reload in 0.1 sec")*/
+                     self.timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+                     print("schedule a table reload in 0.1 sec")
                     
                 }
                 
