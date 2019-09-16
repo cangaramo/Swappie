@@ -17,6 +17,8 @@ class IntercambioUsuarioHeder: UICollectionReusableView {
     @IBOutlet var usuarioImageView:UIImageView?
     @IBOutlet var anyadirProductoButton:UIButton?
     
+    var usuario:Usuario?
+    
     var usuario_id:String? {
         
         didSet {
@@ -25,11 +27,11 @@ class IntercambioUsuarioHeder: UICollectionReusableView {
                 .observeSingleEvent(of: .value, with: { (snapshot) in
                         
                         if let dictionary = snapshot.value as? [String: AnyObject] {
-                            let usuario = Usuario(dictionary: dictionary)
-                            self.usuarioLabel!.text = "Productos de " + usuario.nombre!
+                            self.usuario = Usuario(dictionary: dictionary)
+                            self.usuarioLabel!.text = "Productos de " + self.usuario!.nombre!
                             
-                            if (usuario.imagen != "") {
-                                self.usuarioImageView!.loadImageUsingCacheWithUrlString(usuario.imagen!)
+                            if (self.usuario!.imagen != "") {
+                                self.usuarioImageView!.loadImageUsingCacheWithUrlString(self.usuario!.imagen!)
                             }
                             else {
                                 self.usuarioImageView!.image = UIImage(named:"avatar")
@@ -44,4 +46,5 @@ class IntercambioUsuarioHeder: UICollectionReusableView {
         
     }
     
+
 }

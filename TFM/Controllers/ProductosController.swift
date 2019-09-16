@@ -12,7 +12,7 @@ import UIKit
 import Firebase
 import MapKit
 
-class ProductosController: UIViewController, UISearchBarDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, CLLocationManagerDelegate {
+class ProductosController: UIViewController, UISearchBarDelegate, CLLocationManagerDelegate {
     
     @IBOutlet var collectionView:UICollectionView?
     private let itemsPerRow: CGFloat = 2
@@ -24,6 +24,7 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     //Search bar
     @IBOutlet weak var searchBar: UISearchBar!
 
+    @IBOutlet var mensajeView:UIView?
     
     //Todos los mensajes
     var productos = [Producto]()
@@ -53,6 +54,8 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         let light_gray = UIColor(rgb:0xffffff)
         searchBar.backgroundColor = light_gray
         searchBar.setImage(UIImage(), for: .clear, state: .normal)
+        
+        mensajeView?.isHidden = true
         
         //self.navigationController?.navigationBar.backgroundColor = UIColor.white 
         
@@ -192,6 +195,8 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
                         }
                     }
                     
+                    self.handleReloadTable()
+                    
                 }
                 
             }, withCancel: nil)
@@ -202,6 +207,11 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
     @objc func handleReloadTable () {
         DispatchQueue.main.async(execute: {
             self.collectionView!.reloadData()
+            
+            if (self.productos.isEmpty) {
+                self.mensajeView?.isHidden = false
+            }
+            
         })
     }
     
@@ -332,56 +342,7 @@ class ProductosController: UIViewController, UISearchBarDelegate, UICollectionVi
         navigationController?.pushViewController(filtrosController,animated: true)
     }
     
-    /* Collection view */
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let flowayout = collectionViewLayout as? UICollectionViewFlowLayout
-        let space: CGFloat = (flowayout?.minimumInteritemSpacing ?? 0.0) + (flowayout?.sectionInset.left ?? 0.0) + (flowayout?.sectionInset.right ?? 0.0)
-        let size:CGFloat = (collectionView.frame.size.width - space) / 2.0
-        return CGSize(width: size, height:250)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        if (filtering){
-            return filteredProductos.count
-        }
-        else {
-            return productos.count
-        }
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        var producto = productos[indexPath.item]
-        
-        if (filtering){
-            producto = filteredProductos[indexPath.item]
-        }
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! ProductoCell
-        
-        cell.producto = producto
-        
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        //Pasar producto
-        var producto = productos[indexPath.item]
-        
-        if (filtering){
-            producto = filteredProductos[indexPath.item]
-        }
-        
-        //Detail Producto Controller
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let detailProductoController = storyboard.instantiateViewController(withIdentifier: "detailProductoController") as! DetailProductoController
-        detailProductoController.producto = producto
-        navigationController?.pushViewController(detailProductoController,animated: true)
-    }
 }
 
 // MARK: - Collection View Flow Layout Delegate

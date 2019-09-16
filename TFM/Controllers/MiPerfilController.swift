@@ -61,7 +61,10 @@ class MiPerfilController: UIViewController {
     
     //Cerrar sesion
     @IBAction func cerrarSesion(){
-        
+        confirmarCerrarSesion()
+    }
+    
+    func realizarCierreSesion(){
         do {
             try Auth.auth().signOut()
         } catch let logoutError {
@@ -69,6 +72,18 @@ class MiPerfilController: UIViewController {
         }
         
         dismiss(animated: true, completion: nil)
+    }
+    
+    func confirmarCerrarSesion(){
+        let alert = UIAlertController(title: "¿Estás seguro que quieres cerrar sesión?", message: "", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: { action in
+            self.realizarCierreSesion()
+        }
+        ))
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .default, handler: nil))
+        
+        self.present(alert, animated: true)
     }
     
     //Editar Perfil
