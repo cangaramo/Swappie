@@ -27,9 +27,7 @@ class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, U
             interfaceSegmented.setButtonTitles(buttonTitles: ["Mujer","Hombre"])
             interfaceSegmented.selectorViewColor = UIColor(rgb: 0xf45b55)
             interfaceSegmented.selectorTextColor = UIColor(rgb: 0xf45b55)
-            
-            interfaceSegmented.Test = self.Test
-            
+            interfaceSegmented.Test = self.cambiarGenero
         }
     }
     
@@ -53,13 +51,11 @@ class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, U
         //Buscamos ese usuario en Categorias mujer
         let ref = Database.database().reference().child("categorias").child("hombre")
         
-        //Loop mensaje
+        //Loop categorias
         ref.observe(.childAdded, with: { (snapshot) in
             
             //Cogemos la categoria
             let categoriaId = snapshot.key
-            
-            //Y ahora vamos a MESSAGES
             let categoriasReference = ref.child(categoriaId)
             
             //Single
@@ -67,6 +63,7 @@ class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, U
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let categoria = Categoria(dictionary: dictionary)
+                    categoria.categoriaID = snapshot.key
                     
                     self.categoriasHombre.append(categoria)
                     
@@ -83,7 +80,7 @@ class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, U
         }, withCancel: nil)
     }
     
-    //Observe messages
+    //Categorias mujer
     func observeCategoriasMujer() {
         
         //Buscamos ese usuario en Categorias mujer
@@ -91,15 +88,10 @@ class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, U
         
         //Loop mensaje
         ref.observe(.childAdded, with: { (snapshot) in
-            
-            print ("OBSERVE")
+
             
             //Cogemos la categoria
             let categoriaId = snapshot.key
-            
-            print (categoriaId)
-            
-            //Y ahora vamos a MESSAGES
             let categoriasReference = ref.child(categoriaId)
             
             //Single
@@ -128,22 +120,17 @@ class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, U
     var timer: Timer?
     
     @objc func handleReloadTable() {
-        //this will crash because of background thread, so lets call this on dispatch_async main thread
         DispatchQueue.main.async(execute: {
             print("we reloaded the table")
             self.tableView?.reloadData()
         })
     }
     
-    @objc func hasChanged(){
-        print ("has changed")
-    }
     
-    func Test(){
+    func cambiarGenero(){
         segmentedControlIndex = interfaceSegmented.selectedIndex
         tableView?.reloadData()
     }
-    
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -170,26 +157,26 @@ class SeleccionarCategoriaController: UIViewController, UITableViewDataSource, U
         }
         
         return cell
-        
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //Genero
-        var genero = ""
+        //Genero y categorias
         if (segmentedControlIndex == 0){
-           genero = "mujer"
+            let genero = "mujer"
+            let categoria = categoriasMujer[indexPath.row]
+            self.seleccionarCategoria!(categoria.categoriaID!, categoria.nombre!, genero)
+            self.navigationController?.popViewController(animated: true)
         }
         else {
-            genero = "hombre"
+            let genero = "hombre"
+            let categoria = categoriasHombre[indexPath.row]
+            self.seleccionarCategoria!(categoria.categoriaID!, categoria.nombre!, genero)
+            self.navigationController?.popViewController(animated: true)
         }
+    
         
-        //Categoria
-        let categoria = categoriasMujer[indexPath.row]
-        
-        self.seleccionarCategoria!(categoria.categoriaID!, categoria.nombre!, genero)
-        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func changed(){

@@ -1,6 +1,6 @@
 //
 //  MapController.swift
-//  
+//
 //
 //  Created by Clarisa Angaramo on 08/09/2019.
 //
@@ -36,7 +36,7 @@ class MapController: UIViewController {
         
         let radius:CLLocationDistance = 500
         mostrarCirculo(coordinate: location,
-                   radius: radius)
+                       radius: radius)
     }
     
     func checkLocationServices() {
@@ -61,30 +61,30 @@ class MapController: UIViewController {
         case .authorizedAlways:
             break
         }
-
+        
     }
     
     //Mostrar circulo
     func mostrarCirculo(coordinate: CLLocationCoordinate2D,
-                    radius: CLLocationDistance) {
+                        radius: CLLocationDistance) {
         let circle = MKCircle(center: coordinate,
                               radius: radius)
         mapView!.addOverlay(circle)
     }
-
+    
 }
 
 // Dibujar Circulo
 extension MapController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView,
                  rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-         let circleOverlay = overlay as? MKCircle
+        let circleOverlay = overlay as? MKCircle
         
         let circleRenderer = MKCircleRenderer(overlay: circleOverlay!)
         let purple = UIColor(rgb:0x5446d9)
-            circleRenderer.fillColor = purple
-            circleRenderer.alpha = 0.1
-            
-            return circleRenderer
+        circleRenderer.fillColor = purple
+        circleRenderer.alpha = 0.1
+        
+        return circleRenderer
     }
 }
