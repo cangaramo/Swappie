@@ -44,16 +44,14 @@ extension MensajesController: UITableViewDataSource, UITableViewDelegate {
             }
             
             let user = Usuario(dictionary: dictionary)
-            //el dictionary no contiene la key
             user.id = chatPartnerId
-            self.showChatControllerFourUser(user: user)
+            self.mostrarChatController(user: user)
             
         }, withCancel: nil)
         
     }
     
-    func showChatControllerFourUser(user: Usuario){
-        
+    func mostrarChatController(user: Usuario){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let chatController = storyboard.instantiateViewController(withIdentifier :"chatController") as! ChatController
         chatController.usuario_other = user

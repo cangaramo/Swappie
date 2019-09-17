@@ -16,7 +16,7 @@ class PerfilHeder: UICollectionReusableView {
     @IBOutlet var ubicacionLabel:UILabel?
     @IBOutlet var descripcionLabel:UILabel?
     @IBOutlet var perfilView:UIView?
-    
+    @IBOutlet var numeroProductos:UILabel?
     
     var usuario:Usuario? {
         

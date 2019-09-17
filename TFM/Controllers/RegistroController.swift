@@ -20,15 +20,12 @@ class RegistroController: ViewController, UITextFieldDelegate{
     
     override func viewDidLoad(){
         
-        
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.backgroundColor = .clear
         
         registroButton!.addTarget(self, action: #selector(registrarUsuario), for: .touchUpInside)
-        
-        self.hideKeyboardWhenTappedAround()
         
         nombreTextField?.delegate = self
         emailTextField?.delegate = self
@@ -43,6 +40,8 @@ class RegistroController: ViewController, UITextFieldDelegate{
         addBorder(textField: emailTextField!, border_color: border_color)
         addBorder(textField: nombreTextField!, border_color: border_color)
         addBorder(textField: contrasenaTextField!, border_color: border_color)
+        
+        self.hideKeyboardWhenTappedAround()
     }
     
     /* Métodos */

@@ -13,11 +13,6 @@ extension SubirProductoController: UIImagePickerControllerDelegate, UINavigation
     
     
     func setImagePickers(){
-    
-        /* Pick images */
-       // previewImage1!.image = UIImage(named:"add-image.png")
-       // previewImage2!.image = UIImage(named:"add-image.png")
-       // previewImage3!.image = UIImage(named:"add-image.png")
         
         previewImage1!.tag = 1
         previewImage2!.tag = 2

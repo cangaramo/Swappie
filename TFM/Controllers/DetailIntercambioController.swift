@@ -31,6 +31,9 @@ class DetailIntercambioController: UIViewController {
     var usuario_other:String?
     var usuario_self:String?
     
+    var usuario_self_full:Usuario?
+    var usuario_other_full:Usuario?
+    
     var productos_self = [Producto]()
     var productos_other = [Producto]()
     
@@ -45,6 +48,7 @@ class DetailIntercambioController: UIViewController {
         usuario_self = Auth.auth().currentUser!.uid
         obtenerProductosSelf()
         obtenerProductosOther()
+        obtenerUsuarios()
         comprobarEstado()
     }
     
@@ -84,7 +88,7 @@ class DetailIntercambioController: UIViewController {
         })
     }
 
-    /* Collección arriba */
+    /* Colección otro usuario */
     func obtenerProductosOther(){
         
         let usuario_id = self.usuario_other
@@ -127,7 +131,7 @@ class DetailIntercambioController: UIViewController {
     }
     
     
-    /* Colleción de abajo */
+    /* Mi colección */
     func obtenerProductosSelf(){
        
         let usuario_id = self.usuario_self
@@ -164,10 +168,15 @@ class DetailIntercambioController: UIViewController {
         })
     }
     
+    @objc func seeProductosSelf(){
+        self.handleReloadTable2()
+        actualizarConstraints()
+    }
+    
+    // Marcar como vendido
     func marcarComoVendido(){
         
         let productos = Database.database().reference().child("productos")
-        
         productos.observe(.childAdded, with: { (snapshot) in
             
             let producto_id = snapshot.key
@@ -190,15 +199,12 @@ class DetailIntercambioController: UIViewController {
                 let productoReference = productos.child(producto_id)
                 productoReference.child("intercambiado").setValue(1)
             }
-            
         })
     }
     
-    @objc func seeProductosSelf(){
-        self.handleReloadTable2()
-        actualizarConstraints()
-    }
-
+    
+    /* MODIFICAR LISTA DE PRODUCTOS */
+    
     //Ir a AnyadirProductos Controller
     @objc func anyadir (){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -209,7 +215,7 @@ class DetailIntercambioController: UIViewController {
         navigationController?.pushViewController(anyadirProductosController,animated: true)
     }
     
-    /* Obtener los productos seleccionados */
+    // Obtener los productos seleccionados
     func anyadirProductos(productos_seleccionados:[Producto]){
         
         productosAnyadir(productos_seleccionados: productos_seleccionados)
@@ -223,17 +229,6 @@ class DetailIntercambioController: UIViewController {
         cambioRealizado()
     }
     
-    /* Borrar producto */
-    @objc func borrarProducto (sender: UIButton) {
-        let buttonIndex = sender.tag
-        let producto = productos_self[buttonIndex]
-        productos_self_viejos.append(producto)
-        
-        productos_self.remove(at: buttonIndex)
-        self.handleReloadTable2()
-        
-        cambioRealizado()
-    }
     
     //Productos a anyadir
     func productosAnyadir(productos_seleccionados: [Producto]){
@@ -265,10 +260,25 @@ class DetailIntercambioController: UIViewController {
         }
     }
     
+    func cambioRealizado(){
+        enviarButton?.setTitle("Sugerir intercambio", for: .normal)
+        sugerir = true
+    }
     
-    /* Actualizar Firebase DB */
+    @objc func borrarProducto (sender: UIButton) {
+        let buttonIndex = sender.tag
+        let producto = productos_self[buttonIndex]
+        productos_self_viejos.append(producto)
+        
+        productos_self.remove(at: buttonIndex)
+        self.handleReloadTable2()
+        
+        cambioRealizado()
+    }
+    
+    
+    /* ACTUALIZAR INTERCAMBIO EN BD */
     @IBAction func actualizarIntercambio(){
-       
         
         //Marcar como realizado
         if (aceptado) {
@@ -326,19 +336,16 @@ class DetailIntercambioController: UIViewController {
             let intercambioUsuario1 = Database.database().reference().child("usuarios-intercambios").child(self.usuario_self!).child(intercambioId!)
             intercambioUsuario1.child("estado").setValue("Aceptado")
             
-            
             let intercambioUsuario2 = Database.database().reference().child("usuarios-intercambios").child(self.usuario_other!).child(intercambioId!)
             intercambioUsuario2.child("estado").setValue("Aceptado")
-            
         }
         
-        
         self.navigationController?.popViewController(animated: true)
-        
     }
     
+    
+    /* Acciones */
     @IBAction func cancelarIntercambio(){
-        print ("Cancelar intercambio")
         
         /* Marcar el usuario actual como ACEPTADO */
         let intercambioUsuario1 = Database.database().reference().child("usuarios-intercambios").child(self.usuario_self!).child(intercambioId!)
@@ -351,18 +358,18 @@ class DetailIntercambioController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func cambioRealizado(){
-        enviarButton?.setTitle("Sugerir intercambio", for: .normal)
-        sugerir = true
-    }
-    
     
     @IBAction func abrirChat(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let chatController = storyboard.instantiateViewController(withIdentifier: "chatController") as! ChatController
-        let usuario_chat = Usuario()
-        usuario_chat.id = usuario_other
-        chatController.usuario_other = usuario_chat
+        
+        //let usuario_chat = Usuario()
+       // usuario_chat.id = usuario_other
+        //chatController.usuario_other = usuario_chat
+        
+        chatController.usuario_other = usuario_other_full
+        
+        
         navigationController?.pushViewController(chatController,animated: true)
     }
     
@@ -383,5 +390,28 @@ class DetailIntercambioController: UIViewController {
         containerViewHeight!.constant = heightCollectionView + heightCollection2View + heightNavbar + heightBottomBAR
         
         self.collectionView!.layoutIfNeeded()
+    }
+    
+    func obtenerUsuarios(){
+        
+        Database.database().reference().child("usuarios").child(self.usuario_self!)
+            .observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    self.usuario_self_full = Usuario(dictionary: dictionary)
+                    self.usuario_self_full!.id = snapshot.key
+                }
+            },
+            withCancel: nil
+        )
+        
+        Database.database().reference().child("usuarios").child(self.usuario_other!)
+            .observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    self.usuario_other_full = Usuario(dictionary: dictionary)
+                    self.usuario_other_full!.id = snapshot.key
+                }
+            },
+                                withCancel: nil
+        )
     }
 }

@@ -57,7 +57,7 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         label.textAlignment = .center
         
         if (tallaTextField!.isFirstResponder){
-            label.text =  salutations[row]
+            label.text =  tallas[row]
         }
         else {
             label.text =  estados[row]
@@ -75,7 +75,7 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         
         if (tallaTextField!.isFirstResponder){
-           return salutations.count
+           return tallas.count
         }
         else {
             return estados.count
@@ -85,7 +85,7 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         if (tallaTextField!.isFirstResponder){
-            return salutations[row]
+            return tallas[row]
         }
         else {
             return estados[row]
@@ -94,7 +94,7 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
         if (tallaTextField!.isFirstResponder){
-            tallaTextField!.text = salutations[row]
+            tallaTextField!.text = tallas[row]
         }
         else if (estadoTextField!.isFirstResponder){
             estadoTextField!.text = estados[row]

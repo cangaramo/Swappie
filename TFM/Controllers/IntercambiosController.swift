@@ -76,8 +76,6 @@ class IntercambiosController:UIViewController, UITableViewDelegate, UITableViewD
         detailIntercambioController.intercambioId = intercambio.id
         
          navigationController?.pushViewController(detailIntercambioController,animated: true)
-        
     }
     
- 
 }

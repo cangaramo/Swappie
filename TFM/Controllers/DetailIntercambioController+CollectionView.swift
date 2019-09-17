@@ -28,9 +28,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
-        
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind:
         String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -42,12 +40,39 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
            header.usuario_id = self.usuario_other
             let anyadirProductoButton = header.anyadirProductoButton
             anyadirProductoButton!.addTarget(self, action: #selector(self.anyadir), for: .touchUpInside)
+           
+            header.usuarioImageView?.isUserInteractionEnabled = true
+            let mytapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(verSuPerfil))
+            header.usuarioImageView?.addGestureRecognizer(mytapGestureRecognizer)
+          
         }
         else {
             header.usuario_id = self.usuario_self
+           
+            header.usuarioImageView?.isUserInteractionEnabled = true
+            let mytapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(verMiPerfil))
+            header.usuarioImageView?.addGestureRecognizer(mytapGestureRecognizer)
+           
         }
         
         return header
+    }
+    
+    @objc func verSuPerfil(_ sender: UITapGestureRecognizer) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let usuarioController = storyboard.instantiateViewController(withIdentifier: "usuarioController") as! UsuarioController
+        usuarioController.usuario = usuario_other_full
+        navigationController?.pushViewController(usuarioController,animated: true)
+        
+    }
+    
+    @objc func verMiPerfil(_ sender: UITapGestureRecognizer) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let usuarioController = storyboard.instantiateViewController(withIdentifier: "usuarioController") as! UsuarioController
+        usuarioController.usuario = usuario_self_full
+        navigationController?.pushViewController(usuarioController,animated: true)
     }
     
     
@@ -96,10 +121,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
             self.collectionView2!.reloadData()
         })
     }
-    
-   
-    
-    
     
     
 }

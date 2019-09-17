@@ -19,7 +19,6 @@ extension EditarPerfilController: UIImagePickerControllerDelegate, UINavigationC
     /* PICK IMAGE */
     
     @objc func seleccionarFoto(sender:UIGestureRecognizer){
-       // let avatarImageView = sender.view!
         
         //Open image picker
         let picker = UIImagePickerController()
@@ -40,7 +39,7 @@ extension EditarPerfilController: UIImagePickerControllerDelegate, UINavigationC
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             selectedImageFromPicker = editedImage
         }
-            //Original
+        //Original
         else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             selectedImageFromPicker = originalImage
         }

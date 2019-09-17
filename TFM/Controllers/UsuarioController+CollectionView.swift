@@ -44,10 +44,25 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDele
             "perfilHeader", for: indexPath) as! PerfilHeder
         
         header.usuario = self.usuario
+        
+        //Calcular altura de forma dinamica
         headerHeight = header.getHeaderHeight()
         self.view.layoutIfNeeded()
         header.layoutIfNeeded()
         
+        
+        //Total productos
+        let total = productos.count
+        if (total == 0) {
+             header.numeroProductos?.text = ""
+        }
+        else if (total == 1) {
+            header.numeroProductos?.text = String(total) + " producto"
+        }
+        else {
+            header.numeroProductos?.text = String(total) + " productos"
+        }
+       
         return header
     }
     
@@ -76,7 +91,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDele
             cell.intercambiadoView?.isHidden = false
         }
         
-        
         return cell
     }
     
@@ -95,48 +109,25 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDele
     @objc func handleReloadTable () {
         DispatchQueue.main.async(execute: {
             self.collectionView!.reloadData()
+            
         })
     }
     
-
+    /* Scroll view */
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView){
         lastOffsetY = scrollView.contentOffset.y
     }
- 
 
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView){
-    
     //func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
        let hide = scrollView.contentOffset.y > self.lastOffsetY
         
         if (hide){
-            /*
-            perfilView!.isHidden = true
-            self.notHiddenConstraint.isActive = false
-            self.hiddenConstraint.isActive = true */
             self.navigationItem.title = usuario!.nombre
-
-            /*
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: 0.6) {
-                self.view.layoutIfNeeded()
-            }*/
         }
         else {
-            /*
-            self.notHiddenConstraint.isActive = true
-            self.hiddenConstraint.isActive = false */
             self.navigationItem.title = ""
-            
-            /*
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: 0.6, animations: {
-                self.view.layoutIfNeeded()
-            }, completion: {res in
-                //Do something
-                self.perfilView!.isHidden = false
-            })*/
         }
     }
 }

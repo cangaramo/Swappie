@@ -28,6 +28,8 @@ class IntercambioUsuarioHeder: UICollectionReusableView {
                         
                         if let dictionary = snapshot.value as? [String: AnyObject] {
                             self.usuario = Usuario(dictionary: dictionary)
+                            self.usuario!.id = snapshot.key
+                            print (snapshot.key)
                             self.usuarioLabel!.text = "Productos de " + self.usuario!.nombre!
                             
                             if (self.usuario!.imagen != "") {

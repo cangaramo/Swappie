@@ -16,7 +16,6 @@ class BienvenidoController: ViewController{
     
     override func viewDidLoad(){
         
-        
         iniciarSesionButton!.addTarget(self, action: #selector(irAIniciarSesion), for: .touchUpInside)
         registrarseButton!.addTarget(self, action: #selector(irARegistro), for: .touchUpInside)
         
@@ -33,14 +32,9 @@ class BienvenidoController: ViewController{
   
         //Si no existe usuario -> mostrar pantalla de Login/Register
         if Auth.auth().currentUser?.uid == nil {
-            //perform(#selector(handleLogout), with: nil, afterDelay: 0)
-            print ("nada")
-            
         }
-            //Si existe -> Obtener usuarios
+        //Si existe -> Mostrar menu
         else {
-            print (Auth.auth().currentUser?.uid )
-            //fetchUserAndSetupNavBarTitle()
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let tabMenu = (storyboard.instantiateViewController(withIdentifier: "tabMenu") as? UITabBarController) {

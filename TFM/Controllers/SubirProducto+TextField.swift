@@ -46,10 +46,9 @@ extension SubirProductoController: UITextViewDelegate, UITextFieldDelegate {
     /* Text fields */
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
+        //Categorias Text Field
         if (textField.tag == 3 ) {
-            
             textField.resignFirstResponder()
-            
             irACategorias()
         }
         else {
@@ -95,11 +94,6 @@ extension SubirProductoController: UITextViewDelegate, UITextFieldDelegate {
     
     /* Text view */
     func textViewDidBeginEditing(_ textView: UITextView) {
-        /*
-         if descripcionTexView!.textColor == UIColor.lightGray {
-         descripcionTexView!.text = nil
-         descripcionTexView!.textColor = UIColor.black
-         }*/
         
         let border_color = UIColor(rgb: 0x5446D9)
         addBorder(textField: textView.superview!, border_color: border_color)
@@ -113,12 +107,7 @@ extension SubirProductoController: UITextViewDelegate, UITextFieldDelegate {
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        /*
-         if descripcionTexView!.text.isEmpty {
-         descripcionTexView!.text = "Añade una descripción"
-         descripcionTexView!.textColor = UIColor.lightGray
-         }*/
-        
+  
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: textView.superview!, border_color: border_color)
         

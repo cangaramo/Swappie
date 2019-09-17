@@ -15,7 +15,6 @@ class MensajesController:UIViewController {
     @IBOutlet var tableView:UITableView?
     
     override func viewDidLoad() {
-       // super.viewDidLoad()
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         observeUserMessages()
     }
@@ -27,7 +26,7 @@ class MensajesController:UIViewController {
     var messagesDictionary = [String: Mensaje]()
     
     
-    //Observe messages
+    //Observamos mensajes
     func observeUserMessages() {
         
         //Cogemos cualquier de los usuarios (TO y FROM)
@@ -54,7 +53,7 @@ class MensajesController:UIViewController {
                     let message = Mensaje(dictionary: dictionary)
                     
                     if let chatPartnerId = message.chatPartnerId() {
-                        //if let toId = message.toId {
+                        
                         //Esto se sobreescribe, por lo tanto solo tendremos un valor por toId
                         self.messagesDictionary[chatPartnerId] = message
                         
@@ -83,10 +82,7 @@ class MensajesController:UIViewController {
     var timer: Timer?
     
     @objc func handleReloadTable() {
-        //this will crash because of background thread, so lets call this on dispatch_async main thread
         DispatchQueue.main.async(execute: {
-            print("we reloaded the table")
-            print (self.messages)
             self.tableView?.reloadData()
         })
     }
