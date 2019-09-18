@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Firebase
 
-class ChatController:UIViewController, UITextFieldDelegate{
+class ChatController:UIViewController {
     
     @IBOutlet var collectionView:UICollectionView?
     
@@ -28,103 +28,25 @@ class ChatController:UIViewController, UITextFieldDelegate{
     }
     
     override func viewDidLoad() {
-        // super.viewDidLoad()
-        
-        print ("holaaa")
-        //self.hideKeyboardWhenTappedAround()
-        
+       
         inputTextField?.delegate = self
-        //inputTextField?.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
-        
         inputTextField?.addTarget(self, action: #selector(textFieldDidChange), for: UIControl.Event.editingChanged)
 
+        //Collection View
+        collectionView?.alwaysBounceVertical = true
+        collectionView?.register(ChatMensajeCell.self, forCellWithReuseIdentifier: "cellId")
         
+        //Esconder teclado cuando se toca la tabla
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         collectionView!.addGestureRecognizer(tapGesture)
-        
-        collectionView?.alwaysBounceVertical = true
-        collectionView?.register(ChatMensajeCell.self, forCellWithReuseIdentifier: "cellId")
-    }
-    
-    @objc func hideKeyboard() {
-        self.view.endEditing(true)
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.animateTextField(textField: textField, up:true)
-        
-
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        self.animateTextField(textField: textField, up:false)
-        
-    }
-    
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        print ("Text has changed")
-        
-        if (textField.text!.isEmpty){
-            sendButton!.backgroundColor = UIColor(rgb:0xdedede)
-            sendButton!.setImage(UIImage(named: "white-send"), for: UIControl.State.normal)
-            sendButton?.isEnabled = false
-        }
-        else {
-            sendButton!.backgroundColor = UIColor(rgb:0xFCE1DA)
-            sendButton!.setImage(UIImage(named: "send"), for: UIControl.State.normal)
-            sendButton?.isEnabled = true
-        }
-    }
-    
-    func animateTextField(textField: UIView, up: Bool)
-    {
-        //let tabbarhHeight = CGFloat ((tabBarController?.tabBar.frame.size.height)!)
-       // print (tabbarhHeight)
-        let tabbarhHeight = CGFloat (50)
-        let totalDistance = tabbarhHeight + 160
-        let movementDistance:CGFloat = -totalDistance
-        var movementDuration: Double = 0
-        
-        var movement:CGFloat = 0
-        if up
-        {
-            movement = movementDistance
-            movementDuration = 0.5
-        }
-        else
-        {
-            movement = -movementDistance
-            movementDuration = 0.25
-        }
-        UIView.beginAnimations("animateTextField", context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration)
-        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
-        UIView.commitAnimations()
     }
     
     
-    @objc func keyboardWillShow(notification: NSNotification) {
-        
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height
-            }
-        }
-    
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
-    }
     
     //Observe messages
     func observeMessages() {
         
-        print ("observar mensajes")
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -147,7 +69,6 @@ class ChatController:UIViewController, UITextFieldDelegate{
                     self.mensajes.append(mensaje)
                     
                     DispatchQueue.main.async(execute: {
-                        print (self.mensajes)
                       
                         self.collectionView?.reloadData()
                         
@@ -164,23 +85,19 @@ class ChatController:UIViewController, UITextFieldDelegate{
     
     //Send message
     @IBAction func handleSend(){
-        print ("wtf")
         
         if (inputTextField!.text! != "" ) {
             
             let ref = Database.database().reference().child("mensajes")
             let childRef = ref.childByAutoId()
             
-            //is it there best thing to include the name inside of the message node
+            //Valores
             let destinatarioId = usuario_other!.id
             let remitenteId = Auth.auth().currentUser!.uid
             let fecha = Int(Date().timeIntervalSince1970)
             
             let values = ["texto": inputTextField!.text!, "destinatarioId": destinatarioId, "remitenteId": remitenteId, "fecha": fecha] as [String : Any]
-            
-            //Old: anyadir a mensajes y ya esta
-            //childRef.updateChildValues(values)
-            
+        
             //Anyadir primero a MENSAJES
             childRef.updateChildValues(values) { (error, ref) in
                 if error != nil {

@@ -13,7 +13,8 @@ import Firebase
 extension ChatController:
 UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     
-    //Collection view
+    /* Collection view */
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return mensajes.count
     }
@@ -27,24 +28,18 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
         //Mensaje
         cell.textView.text = message.texto
         
-        //Esto no hace nada
-        //cell.message = message
-        
+        //Burbuja de mi usuario
         if message.remitenteId == Auth.auth().currentUser?.uid {
-            //outgoing blue
             cell.bubbleView.backgroundColor = ChatMensajeCell.blueColor
             cell.textView.textColor = UIColor.white
-            //cell.profileImageView.isHidden = true
-            
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
             
-        } else {
-            //incoming gray
+        }
+        //Burbuja del otro usuario
+        else {
             cell.bubbleView.backgroundColor = UIColor(red: 240, green: 240, blue: 240)
             cell.textView.textColor = UIColor.black
-            //  cell.profileImageView.isHidden = false
-            
             cell.bubbleViewRightAnchor?.isActive = false
             cell.bubbleViewLeftAnchor?.isActive = true
         }
@@ -63,7 +58,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
         
         var height: CGFloat = 80
         
-        //get estimated height somehow????
+        //obtener altura
         if let text = mensajes[indexPath.item].texto {
             height = estimateFrameForText(text).height + 20
         }

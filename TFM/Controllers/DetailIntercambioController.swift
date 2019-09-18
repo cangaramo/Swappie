@@ -22,6 +22,8 @@ class DetailIntercambioController: UIViewController {
     @IBOutlet var enviarButton: UIButton?
     @IBOutlet var cancelarButton: UIButton?
     
+    @IBOutlet var infoMensaje:UIView?
+    
     var sugerir:Bool = false
     var aceptado:Bool = false
     var realizado:Bool = false
@@ -50,6 +52,8 @@ class DetailIntercambioController: UIViewController {
         obtenerProductosOther()
         obtenerUsuarios()
         comprobarEstado()
+        
+        infoMensaje!.isHidden = true
     }
     
     func comprobarEstado(){
@@ -139,6 +143,16 @@ class DetailIntercambioController: UIViewController {
         let refIntercambio = Database.database().reference().child("intercambios").child(intercambioId!)
         let usuarioSelfRef = refIntercambio.child(usuario_id!)
         
+        usuarioSelfRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if (snapshot.hasChildren()){
+                self.infoMensaje!.isHidden = true
+            }
+            else {
+                self.infoMensaje!.isHidden = false
+            }
+        })
+
         usuarioSelfRef.observe(.childAdded, with: { (snapshot) in
            
             let producto_id = snapshot.key
@@ -146,7 +160,7 @@ class DetailIntercambioController: UIViewController {
             
             //Single
             productoReference.observeSingleEvent(of: .value, with: { (snapshot) in
-                
+            
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     
                     let productoReal = Producto(dictionary: dictionary)
@@ -165,13 +179,16 @@ class DetailIntercambioController: UIViewController {
                 }
                 
             }, withCancel: nil)
+            
         })
+      
     }
     
     @objc func seeProductosSelf(){
         self.handleReloadTable2()
         actualizarConstraints()
     }
+    
     
     // Marcar como vendido
     func marcarComoVendido(){

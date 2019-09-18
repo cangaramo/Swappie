@@ -16,16 +16,12 @@ class AnyadirProductosController:UIViewController {
     
     var usuario_id:String?
     var productos = [Producto]()
-    
     var productos_seleccionados = [Producto]()
-    
     var anyadirProductos : ( ([Producto] ) -> Void)?
-    
     var timer:Timer?
 
     
     override func viewDidLoad() {
-
         obtenerProductos()
     }
     
@@ -52,8 +48,6 @@ class AnyadirProductosController:UIViewController {
                     producto.id = snapshot.key
                     self.productos.append(producto)
                     
-                    //self.handleReloadTable()
-                    
                      self.timer?.invalidate()
                      print("we just canceled our timer")
                      
@@ -75,10 +69,7 @@ class AnyadirProductosController:UIViewController {
     }
     
     
-    
     @IBAction func productosSeleccionados(){
-        print ("productos seleccionados")
-        print (productos_seleccionados)
         self.anyadirProductos!(productos_seleccionados)
         self.navigationController?.popViewController(animated: true)
     }
