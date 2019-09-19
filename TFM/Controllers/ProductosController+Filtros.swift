@@ -127,13 +127,13 @@ extension ProductosController {
     }
     
     @IBAction func abrirFiltros(){
-        print ("filtrar")
         //Detail Producto Controller
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let filtrosController = storyboard.instantiateViewController(withIdentifier: "filtrosController") as! FiltrosController
         filtrosController.devolverFiltros = self.devolverFiltros
         filtrosController.talla_seccionada = self.talla_seccionada
         filtrosController.estados_seleccionados = self.estados_seleccionados
+        filtrosController.distancia_seleccionada = self.distancia_seleccionada
         navigationController?.pushViewController(filtrosController,animated: true)
     }
     

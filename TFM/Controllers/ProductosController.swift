@@ -12,7 +12,7 @@ import UIKit
 import Firebase
 import MapKit
 
-class ProductosController: UIViewController, CLLocationManagerDelegate {
+class ProductosController: UIViewController {
     
     //Esto acaso lo uso?
     @IBOutlet var collectionView:UICollectionView?
@@ -40,43 +40,31 @@ class ProductosController: UIViewController, CLLocationManagerDelegate {
     //Filtros
     var talla_seccionada = ""
     var estados_seleccionados = [String]()
-    var distancia_seleccionada = 0
+    var distancia_seleccionada = 20
     
     let locationManager = CLLocationManager()
     var latitud_usuario = ""
     var longitud_usuario = ""
     
     override func viewDidLoad() {
-        print("Productos")
         
-        
+        //Searchc bar
         searchBar.delegate = self
         searchBar.backgroundImage = UIImage()
         let light_gray = UIColor(rgb:0xffffff)
         searchBar.backgroundColor = light_gray
         searchBar.setImage(UIImage(), for: .clear, state: .normal)
         
-        mensajeView?.isHidden = true
-        
-        //self.navigationController?.navigationBar.backgroundColor = UIColor.white 
-        
-        //self.navigationController?.navigationBar.backgroundColor = UIColor(red: 1.0, green: 255, blue: 255, alpha: 0)
-        /*
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true*/
-        
         let textFieldInsideUISearchBar = searchBar.value(forKey: "searchField") as? UITextField
-       // textFieldInsideUISearchBar?.textColor = UIColor.red
         textFieldInsideUISearchBar?.backgroundColor = UIColor(rgb:0xf9f9f9)
-        
-        //textFieldInsideUISearchBar?.font = textFieldInsideUISearchBar?.font?.withSize(12)
         textFieldInsideUISearchBar?.font =  UIFont(name: "Raleway-Regular", size: 14)
         
+        //Productos
         obtenerProductos()
+        mensajeView?.isHidden = true
         
+        //Location
         checkLocationServices()
-        
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
@@ -87,47 +75,6 @@ class ProductosController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-    func checkLocationServices() {
-        if CLLocationManager.locationServicesEnabled() {
-            checkLocationAuthorization()
-        } else {
-            // Show alert letting the user know they have to turn this on.
-        }
-    }
-    
-    func checkLocationAuthorization() {
-        switch CLLocationManager.authorizationStatus() {
-        case .authorizedWhenInUse:
-            break
-        case .denied:
-            //Mostrar alerta para activar permisos
-            mostrarMensaje()
-            break
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.requestAlwaysAuthorization()
-        case .restricted: // Show an alert letting them know what’s up
-            break
-        case .authorizedAlways:
-            break
-        }
-        
-    }
-    
-    func mostrarMensaje(){
-        let alertController = UIAlertController(title: "Es necesario activar permisos de Localización", message:
-            "Se necesitan permisos de Localización para buscar productos cerca de ti", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Aceptar", style: .default))
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        
-        latitud_usuario = String(locValue.latitude)
-        longitud_usuario = String(locValue.longitude)
-        
-    }
     
     func obtenerProductos() {
         Database.database().reference().child("productos")
@@ -171,13 +118,6 @@ class ProductosController: UIViewController, CLLocationManagerDelegate {
             
         })
     }
-    
-    
-    
-    
-    
-    
-    
     
     
 }

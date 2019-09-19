@@ -18,6 +18,7 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     @IBOutlet var estado2:UIView?
     @IBOutlet var estado3:UIView?
     @IBOutlet var estado4:UIView?
+    @IBOutlet var slider:UISlider?
     
     let tallas = ["", "XXS", "XS", "S", "M", "L", "XL", "XXL"]
     var talla_seccionada = ""
@@ -25,7 +26,7 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     let estados = ["Sin estrenar", "Apenas usado", "En muy buen estado", "Bastante usado"]
     var estados_seleccionados = [String]()
     
-    var distancia_seleccionada = 10
+    var distancia_seleccionada = 20
     
     var devolverFiltros : ( (String, [String], Int) -> Void)?
     
@@ -55,6 +56,15 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
                 }
                 
             }
+        }
+        
+        if (distancia_seleccionada != 20) {
+            print ("distancia")
+            print (distancia_seleccionada)
+            slider?.setValue(Float(distancia_seleccionada), animated: true)
+            distanciaLabel!.text = "\(distancia_seleccionada)" + " km"
+            //distancia_seleccionada = currentValue
+            
         }
         
         setUIPicker()
@@ -106,7 +116,6 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         let currentValue = Int(sender.value)
         distanciaLabel!.text = "\(currentValue)" + " km"
-        
         distancia_seleccionada = currentValue
     }
     

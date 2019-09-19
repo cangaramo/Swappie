@@ -1,51 +1,15 @@
 //
-//  RegistroController+TextField.swift
+//  IniciarSesion+TextField.swift
 //  TFM
 //
-//  Created by Clarisa Angaramo on 17/09/2019.
+//  Created by Clarisa Angaramo on 19/09/2019.
 //  Copyright © 2019 Clarisa. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-extension RegistroController: UITextFieldDelegate {
-    
-    
-    /* Text Field */
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-        let border_color = UIColor(rgb: 0x5446D9)
-        addBorder(textField: textField, border_color: border_color)
-        self.animateTextField(textField: textField, up:true)
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let border_color = UIColor(rgb: 0xd3d3d3)
-        addBorder(textField: textField, border_color: border_color)
-        self.animateTextField(textField: textField, up:false)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        switch (textField.tag){
-        case 1:
-            emailTextField?.becomeFirstResponder()
-            break
-        case 2:
-            contrasenaTextField!.becomeFirstResponder()
-            break
-        case 3:
-            textField.resignFirstResponder()
-            break
-        default:
-            textField.resignFirstResponder()
-        }
-        
-        // Do not add a line break
-        return false
-    }
+extension IniciarSesionController: UITextFieldDelegate {
     
     /* Métodos */
     func animateTextField(textField: UIView, up: Bool)
@@ -79,5 +43,35 @@ extension RegistroController: UITextFieldDelegate {
         textField.layer.masksToBounds = true
     }
     
+    /* Text field */
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        let border_color = UIColor(rgb: 0x5446D9)
+        addBorder(textField: textField, border_color: border_color)
+        self.animateTextField(textField: textField, up:true)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let border_color = UIColor(rgb: 0xd3d3d3)
+        addBorder(textField: textField, border_color: border_color)
+        self.animateTextField(textField: textField, up:false)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        switch (textField.tag){
+        case 1:
+            contrasenaTextField?.becomeFirstResponder()
+            break
+        case 2:
+            textField.resignFirstResponder()
+            break
+        default:
+            textField.resignFirstResponder()
+        }
+        
+        // Do not add a line break
+        return false
+    }
 }
