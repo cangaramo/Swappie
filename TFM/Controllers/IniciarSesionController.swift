@@ -18,6 +18,7 @@ class IniciarSesionController: ViewController {
     
     override func viewDidLoad(){
         
+        //Navigation controller
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
@@ -25,28 +26,32 @@ class IniciarSesionController: ViewController {
         
         inicioSesionButton!.addTarget(self, action: #selector(iniciarSesion), for: .touchUpInside)
         
-        self.hideKeyboardWhenTappedAround()
+        /* Text fields */
         
         emailTextField?.delegate = self
         contrasenaTextField?.delegate = self
         
+        //Tags
+        emailTextField!.tag = 1
+        contrasenaTextField!.tag = 2
+        
+        //Bordes
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: emailTextField!, border_color: border_color)
         addBorder(textField: contrasenaTextField!, border_color: border_color)
         
-        emailTextField!.tag = 1
-        contrasenaTextField!.tag = 2
+        self.hideKeyboardWhenTappedAround()
     }
-    
-    
     
     @objc func iniciarSesion(){
         
+        //Si no rellena todos los campos
         guard let email = emailTextField!.text, let contrasena = contrasenaTextField!.text else {
             self.mensajeError?.text = "Introduce usuario y contraseña"
             return
         }
         
+        //Autenticar usuario
         Auth.auth().signIn(withEmail: email, password: contrasena, completion: { (user, error) in
             
             if let error = error {
@@ -55,7 +60,7 @@ class IniciarSesionController: ViewController {
                 return
             }
             
-            //Inicio de sesion -> Mostrar menu
+            //Inicio de sesion correcto -> Mostrar menu
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let tabMenu = (storyboard.instantiateViewController(withIdentifier: "tabMenu") as? UITabBarController) {
                 self.present(tabMenu, animated: true, completion: nil)

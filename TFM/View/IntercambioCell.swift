@@ -20,11 +20,8 @@ class IntercambioCell: UITableViewCell {
         
         didSet{
             
-           // self.usuario1Label!.text = intercambio!.usuario1
             self.estadoLabel!.text = intercambio!.estado
             
-            print ("intercambiooooo")
-            print (intercambio!.estado!)
             if (intercambio!.estado! == "Aceptado" || intercambio!.estado! == "Realizado"){
                 self.estadoLabel?.superview!.backgroundColor = UIColor(rgb:0x5446d9)
             }
@@ -43,12 +40,10 @@ class IntercambioCell: UITableViewCell {
                     of: .value,
                     with: {
                         (snapshot) in
-                        print (snapshot)
                         
                         if let dictionary = snapshot.value as? [String: AnyObject] {
                             let usuario = Usuario(dictionary: dictionary)
                             self.usuario1Label!.text = usuario.nombre
-                            
                             
                             if (usuario.imagen != "") {
                                 self.usuarioImageView!.loadImageUsingCacheWithUrlString(usuario.imagen!)

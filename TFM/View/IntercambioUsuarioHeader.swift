@@ -22,30 +22,26 @@ class IntercambioUsuarioHeder: UICollectionReusableView {
     var usuario_id:String? {
         
         didSet {
-            
             Database.database().reference().child("usuarios").child(usuario_id!)
                 .observeSingleEvent(of: .value, with: { (snapshot) in
                         
-                        if let dictionary = snapshot.value as? [String: AnyObject] {
-                            self.usuario = Usuario(dictionary: dictionary)
-                            self.usuario!.id = snapshot.key
-                            print (snapshot.key)
-                            self.usuarioLabel!.text = "Productos de " + self.usuario!.nombre!
+                    if let dictionary = snapshot.value as? [String: AnyObject] {
+                        self.usuario = Usuario(dictionary: dictionary)
+                        self.usuario!.id = snapshot.key
+                        print (snapshot.key)
+                        self.usuarioLabel!.text = "Productos de " + self.usuario!.nombre!
                             
-                            if (self.usuario!.imagen != "") {
-                                self.usuarioImageView!.loadImageUsingCacheWithUrlString(self.usuario!.imagen!)
-                            }
-                            else {
-                                self.usuarioImageView!.image = UIImage(named:"avatar")
-                            }
-                            
+                        if (self.usuario!.imagen != "") {
+                            self.usuarioImageView!.loadImageUsingCacheWithUrlString(self.usuario!.imagen!)
                         }
-                        
+                        else {
+                            self.usuarioImageView!.image = UIImage(named:"avatar")
+                        }
+                    }
                 },
-                    withCancel: nil
+                withCancel: nil
             )
         }
-        
     }
     
 

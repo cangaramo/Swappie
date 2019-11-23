@@ -21,7 +21,7 @@ class CustomSegmentedControl: UIView {
     var selectorViewColor: UIColor = .red
     var selectorTextColor: UIColor = .red
     
-    var Test : ( ( ) -> Void)?
+    var CambiarSegmento : ( ( ) -> Void)?
     
     weak var delegate:CustomSegmentedControlDelegate?
     
@@ -65,7 +65,7 @@ class CustomSegmentedControl: UIView {
                     self.selectorView.frame.origin.x = selectorPosition
                 }
                 btn.setTitleColor(selectorTextColor, for: .normal)
-                Test!()
+                CambiarSegmento!()
             }
         }
     }
@@ -73,7 +73,7 @@ class CustomSegmentedControl: UIView {
    
 }
 
-//Configuration View
+//Configurar Vista
 extension CustomSegmentedControl {
     private func updateView() {
         createButton()

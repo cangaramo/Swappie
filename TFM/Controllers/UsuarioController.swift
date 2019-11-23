@@ -12,15 +12,14 @@ import Firebase
 
 class UsuarioController: ViewController {
     
-    
     @IBOutlet var collectionView:UICollectionView?
-    
     var lastOffsetY :CGFloat = 0
+    var headerHeight:CGFloat = 200
+    
+    @IBOutlet var mensajeView:UIView?
     
     var productos = [Producto]()
     var timer: Timer?
-    
-    var headerHeight:CGFloat = 200
     
     var usuario:Usuario? 
     
@@ -31,44 +30,52 @@ class UsuarioController: ViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         
+        self.mensajeView?.isHidden = true
         obtenerProductos()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        collectionView?.reloadData()
+        //collectionView?.reloadData()
     }
     
     func obtenerProductos() {
         
-        //Buscamos ese usuario en Usuario-productos
         let id = usuario!.id
-        let ref = Database.database().reference().child("usuario-productos").child(id!)
+        
+        //Buscamos ese usuario en Usuario-Productos
+        let refProductos = Database.database().reference().child("usuario-productos")
+        refProductos.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            //El usuario tiene intercambios
+            if (snapshot.hasChild(id!)) {
+                self.mensajeView?.isHidden = true
+            }
+            //El usuario no tiene productos
+            else {
+                self.mensajeView?.isHidden = false
+            }
+            
+        }, withCancel: nil)
         
         //Loop producto
+        let ref = Database.database().reference().child("usuario-productos").child(id!)
         ref.observe(.childAdded, with: { (snapshot) in
             
             //Cogemos el producto id
             let messageId = snapshot.key
-            
             let messagesReference = Database.database().reference().child("productos").child(messageId)
             
-            //Single
             messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
-                    
                     
                     let producto = Producto(dictionary: dictionary)
                     producto.id = snapshot.key
                     self.productos.append(producto)
                     
-                    //Background thread
-                    
+                    //Configurar timer
                      self.timer?.invalidate()
-                     print("we just canceled our timer")
-                     
-                     self.timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-                     print("schedule a table reload in 0.1 sec")
+                     self.timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
                     
                 }
                 

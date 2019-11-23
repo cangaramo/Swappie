@@ -16,26 +16,27 @@ class BienvenidoController: ViewController{
     
     override func viewDidLoad(){
         
+        //Añadir acciones
         iniciarSesionButton!.addTarget(self, action: #selector(irAIniciarSesion), for: .touchUpInside)
         registrarseButton!.addTarget(self, action: #selector(irARegistro), for: .touchUpInside)
         
+        //Navigation controller
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.backgroundColor = .clear
         
+        //Comprobar si el usuario esta loggeado
         checkIfUserIsLoggedIn()
     }
     
-    //CHECK USER
+    //Comprobar usuario
     func checkIfUserIsLoggedIn() {
-  
-        //Si no existe usuario -> mostrar pantalla de Login/Register
+        //Si no existe usuario -> Mostrar pantalla de Login/Register
         if Auth.auth().currentUser?.uid == nil {
         }
         //Si existe -> Mostrar menu
         else {
-            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let tabMenu = (storyboard.instantiateViewController(withIdentifier: "tabMenu") as? UITabBarController) {
                 self.present(tabMenu, animated: true, completion: nil)

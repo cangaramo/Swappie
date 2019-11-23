@@ -15,11 +15,16 @@ extension SubirProductoController {
     
     //Primero subir las imagenes y despues guardar producto
     @objc func subirProducto(){
-        subirImagenes()
+        
+        if (!subiendoProducto){
+            subiendoProducto = true
+            subirImagenes()
+        }
+        
     }
     
     
-    /* SUBIR IMAGENES A STORAGE */
+    /* Subir imagenes a Storage */
     func subirImagenes(){
         
         for selected_image in selected_images {
@@ -42,11 +47,9 @@ extension SubirProductoController {
                         guard let url = url else { return }
                         self.url_images.append(url.absoluteString)
                         
+                        //Configurar timer
                         self.timer?.invalidate()
-                        print("Cancelar timer")
-                        
                         self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.guardarProducto), userInfo: nil, repeats: false)
-                        print("schedule Guardar")
                         
                     })
                     
@@ -58,7 +61,7 @@ extension SubirProductoController {
     /* GUARDAR PRODUCTO */
     @objc func guardarProducto () {
         
-        //Get images
+        //Coger imagenes
         var image1 = ""
         var image2 = ""
         var image3 = ""
@@ -73,7 +76,7 @@ extension SubirProductoController {
             image3 = url_images[2]
         }
         
-        //Get text fields
+        //Recoger datos
         guard let titulo = tituloTextField!.text,
             let descripcion = descripcionTexView!.text,
             let marca = marcaTextField!.text,
@@ -84,10 +87,9 @@ extension SubirProductoController {
                 return
         }
         
-        
         if (titulo != "" && descripcion != "" && marca != "" && talla != "" && estado != ""){
             
-            //FIREBASE
+            //Firebase
             let ref = Database.database().reference().child("productos")
             let childRef = ref.childByAutoId()
             
@@ -110,7 +112,7 @@ extension SubirProductoController {
                           "imagen2": image2,
                           "imagen3": image3,] as [String : Any]
             
-            //Anyadir primero a PRODUCTOS
+            //Anyadir primero a Productos
             childRef.updateChildValues(values) { (error, ref) in
                 if error != nil {
                     print(error ?? "")
@@ -120,7 +122,7 @@ extension SubirProductoController {
                 //Producto ID
                 guard let productoId = childRef.key else { return }
                 
-                //Anyadir a USER-PRODUCTS
+                //Anyadir a Usuario-Productos
                 let userProductsRef = Database.database().reference().child("usuario-productos").child(user_id).child(productoId)
                 userProductsRef.setValue(1)
                 
@@ -131,6 +133,7 @@ extension SubirProductoController {
         }
         else {
             errorMensaje!.text = "Completa todos los campos"
+            subiendoProducto = false
         }
         
         

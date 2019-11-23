@@ -10,21 +10,21 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TFM/Controllers/AnyadirProductosController.swift"
-            timestampString = "590534070.793782"
+            timestampString = "595717352.856415"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77">
+            startingLineNumber = "71"
+            endingLineNumber = "71">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TFM/Controllers/DetailIntercambioController+Modificar.swift"
-            timestampString = "594684743.427545"
+            timestampString = "595717352.85649"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "22"

@@ -23,7 +23,7 @@ extension MensajesController: UITableViewDataSource, UITableViewDelegate {
         //let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellId")
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! UsuarioCell
         
-        //Set message to cell
+        //Añadir mensaje a celda
         let message = messages[indexPath.row]
         cell.message = message
         

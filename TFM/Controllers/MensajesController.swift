@@ -13,9 +13,13 @@ import Firebase
 class MensajesController:UIViewController {
     
     @IBOutlet var tableView:UITableView?
+    @IBOutlet var mensajeView:UIView?
     
     override func viewDidLoad() {
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        
+        mensajeView?.isHidden = true
+        
         observeUserMessages()
     }
     
@@ -34,19 +38,30 @@ class MensajesController:UIViewController {
             return
         }
         
-        //Buscamos ese usuario en USER-MESSAGES
-        let ref = Database.database().reference().child("usuario-mensajes").child(uid)
+        //Buscamos ese usuario en Usuario-Intercambios
+        let refMensajes = Database.database().reference().child("usuario-mensajes")
+        refMensajes.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            //El usuario tiene intercambios
+            if (snapshot.hasChild(uid)) {
+                self.mensajeView?.isHidden = true
+            }
+            //El usuario no tiene intercambios
+            else {
+                self.mensajeView?.isHidden = false
+            }
         
-        //Loop mensaje
+        }, withCancel: nil)
+        
+        //Si tiene intercambios
+        let ref = Database.database().reference().child("usuario-mensajes").child(uid)
         ref.observe(.childAdded, with: { (snapshot) in
             
             //Cogemos el mensaje
             let messageId = snapshot.key
             
-            //Y ahora vamos a MESSAGES
             let messagesReference = Database.database().reference().child("mensajes").child(messageId)
             
-            //Single
             messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -54,7 +69,7 @@ class MensajesController:UIViewController {
                     
                     if let chatPartnerId = message.chatPartnerId() {
                         
-                        //Esto se sobreescribe, por lo tanto solo tendremos un valor por toId
+                        //Agrupar mensajes
                         self.messagesDictionary[chatPartnerId] = message
                         
                         //Convertir en array
@@ -66,11 +81,9 @@ class MensajesController:UIViewController {
                         })
                     }
                     
+                    //Configurar timer
                     self.timer?.invalidate()
-                    print("we just canceled our timer")
-                    
                     self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-                    print("schedule a table reload in 0.1 sec")
                     
                 }
                 

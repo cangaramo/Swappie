@@ -42,9 +42,7 @@ class ChatController:UIViewController {
         collectionView!.addGestureRecognizer(tapGesture)
     }
     
-    
-    
-    //Observe messages
+    //Obtener mensajes
     func observeMessages() {
         
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -98,7 +96,7 @@ class ChatController:UIViewController {
             
             let values = ["texto": inputTextField!.text!, "destinatarioId": destinatarioId, "remitenteId": remitenteId, "fecha": fecha] as [String : Any]
         
-            //Anyadir primero a MENSAJES
+            //Anyadir primero a Mensajes
             childRef.updateChildValues(values) { (error, ref) in
                 if error != nil {
                     print(error ?? "")
@@ -107,14 +105,14 @@ class ChatController:UIViewController {
                 
                 self.inputTextField!.text = nil
                 
-                //Necesitamos la key para USER MENSAJES
+                //Necesitamos la key para Usuario - Mensajes
                 guard let messageId = childRef.key else { return }
                 
-                //Anyadir usuario FROM
+                //Anyadir usuario como remitente
                 let userMessagesRef = Database.database().reference().child("usuario-mensajes").child(remitenteId).child(messageId)
                 userMessagesRef.setValue(1)
                 
-                //Anyadir usuario TO
+                //Anyadir usuario como destinatario
                 let recipientUserMessagesRef = Database.database().reference().child("usuario-mensajes").child(destinatarioId!).child(messageId)
                 recipientUserMessagesRef.setValue(1)
             }

@@ -22,15 +22,13 @@ class UsuarioCell: UITableViewCell {
         
         didSet {
             
-            //User name
-            setupNameAndProfileImage()
+            //Nombre y foto
+            configurarNombreyFoto()
             
-            //Message details
+            //Mensaje
             self.userDetailTextLabel?.text = message?.texto
-            
-            //Timestamp
-            //self.timeLabel?.text = message?.timestamp?.stringValue
-            
+        
+            //Fecha
             if let seconds = message?.fecha?.doubleValue {
                 let timestampDate = Date(timeIntervalSince1970: seconds)
                 
@@ -41,17 +39,7 @@ class UsuarioCell: UITableViewCell {
         }
     }
     
-    //Comprobar quien es el partner (TO o FROM)
-    fileprivate func setupNameAndProfileImage() {
-        
-        /*
-         let chatPartnerId: String?
-         
-         if message?.fromId == Auth.auth().currentUser?.uid {
-         chatPartnerId = message?.toId
-         } else {
-         chatPartnerId = message?.fromId
-         }*/
+    fileprivate func configurarNombreyFoto() {
         
         if let id = message?.chatPartnerId() {
             let ref = Database.database().reference().child("usuarios").child(id)
@@ -69,7 +57,6 @@ class UsuarioCell: UITableViewCell {
         }
     }
     
-    //To add extra styles
     override func awakeFromNib() {
         self.profileImageView?.layer.cornerRadius = 26
         

@@ -11,9 +11,7 @@ import UIKit
 
 extension SubirProductoController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    
     func setImagePickers(){
-        
         previewImage1!.tag = 1
         previewImage2!.tag = 2
         previewImage3!.tag = 3
@@ -33,7 +31,7 @@ extension SubirProductoController: UIImagePickerControllerDelegate, UINavigation
         let imageView = sender.view!
         current_pick_image = imageView.tag
         
-        //Open image picker
+        //Abrir image picker
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.allowsEditing = true
@@ -43,16 +41,15 @@ extension SubirProductoController: UIImagePickerControllerDelegate, UINavigation
     //Recoger imagen seleccionada
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        // Local variable inserted by Swift 4.2 migrator.
         let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         
         var selectedImageFromPicker: UIImage?
         
-        //Edited
+        //Editada
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             selectedImageFromPicker = editedImage
         }
-            //Original
+        //Original
         else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             selectedImageFromPicker = originalImage
         }
@@ -87,7 +84,7 @@ extension SubirProductoController: UIImagePickerControllerDelegate, UINavigation
     
 }
 
-// Helper function inserted by Swift 4.2 migrator.
+// Helper function 
 fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
     return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }

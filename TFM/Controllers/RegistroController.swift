@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 
-
 class RegistroController: ViewController {
     
     @IBOutlet var nombreTextField:UITextField?
@@ -20,6 +19,7 @@ class RegistroController: ViewController {
     
     override func viewDidLoad(){
         
+        //Navigation controller
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
@@ -27,15 +27,17 @@ class RegistroController: ViewController {
         
         registroButton!.addTarget(self, action: #selector(registrarUsuario), for: .touchUpInside)
         
+        /* TEXT FIELDS */
         nombreTextField?.delegate = self
         emailTextField?.delegate = self
         contrasenaTextField?.delegate = self
         
+        //Añadir tags
         nombreTextField!.tag = 1
         emailTextField!.tag = 2
         contrasenaTextField!.tag = 3
         
-        
+        //Añadir borde
         let border_color = UIColor(rgb: 0xd3d3d3)
         addBorder(textField: emailTextField!, border_color: border_color)
         addBorder(textField: nombreTextField!, border_color: border_color)
@@ -46,7 +48,7 @@ class RegistroController: ViewController {
     
     @objc func registrarUsuario(){
         
-        //Get text fields
+        //Recoger datos de text fields
         guard let email = emailTextField!.text,
             let contrasena = contrasenaTextField!.text,
             let nombre = nombreTextField!.text else {
@@ -59,7 +61,6 @@ class RegistroController: ViewController {
             mensajeError!.text = "Introduce usuario y contraseña"
         }
         else {
-            
             //Crear usuario
             Auth.auth().createUser(withEmail: email, password: contrasena, completion: { (res, error) in
                 
@@ -75,12 +76,14 @@ class RegistroController: ViewController {
                     
                     return
                 }
+                
                 guard let uid = res?.user.uid else {
                     return
                 }
+                
                 let values = ["nombre": nombre, "email": email, "descripcion": "", "ubicacion": "", "genero": "", "imagen": ""]
                 
-                //successfully authenticated user
+                //Añadir usuario a la BD
                 let ref = Database.database().reference()
                 let usersReference = ref.child("usuarios").child(uid)
                 

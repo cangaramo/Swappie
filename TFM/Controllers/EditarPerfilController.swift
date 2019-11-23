@@ -32,14 +32,15 @@ class EditarPerfilController: ViewController {
         
         setImagePicker()
         
+        setUserData()
+        
         //Text view
         descripcionTextView!.delegate = self
         descripcionTextView!.tag = 2
         descripcionTextView?.text = "Añade una descripción"
         descripcionTextView!.textColor = UIColor.lightGray
         
-        setUserData()
-        
+        //Text field
         nombreTextField!.delegate = self
         ubicacionTextField!.delegate = self
         generoTextField!.delegate = self
@@ -94,14 +95,11 @@ class EditarPerfilController: ViewController {
         if (usuario!.genero != "") {
             generoTextField!.text = usuario!.genero
         }
-        
     }
-    
     
     @IBAction func cancelar() {
         dismiss(animated: true, completion: nil)
     }
-    
     
     @IBAction func guardar(){
         
@@ -136,7 +134,6 @@ class EditarPerfilController: ViewController {
                     guard let url = url else { return }
                     
                     //Foto subida correctamente: actualizar usuario
-                    print("Foto subida")
                     self.actualizarUsuario(imagen_url: url.absoluteString)
                 })
             })

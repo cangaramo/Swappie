@@ -17,7 +17,6 @@ class SeleccionarCategoriaCell: UITableViewCell {
         
         didSet {
             
-            //Message details
             self.categoriaTextLabel?.text = categoria?.nombre
             
             if (categoria?.nombre == "Ver todo") {

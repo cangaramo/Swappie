@@ -11,18 +11,18 @@ import UIKit
 
 extension ProductosController: UISearchBarDelegate {
     
-    //Start search
+    //Comenzar busqueda
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
     
-    //Cancel search button
+    //Cancelar busqueda
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
         searchBar.endEditing(true)
     }
     
-    //Search button
+    //Botón buscar
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.setShowsCancelButton(false, animated: true)
@@ -34,12 +34,13 @@ extension ProductosController: UISearchBarDelegate {
     }
     
     
-    //Search function
+    //Realizar busqueda
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         let keyword:String = searchText
         
         if (!keyword.isEmpty){
+            print ("keyword")
             let buscar_productos = productos
             
             filteredProductos = buscar_productos.filter(
@@ -55,15 +56,21 @@ extension ProductosController: UISearchBarDelegate {
             filtering = true
         }
         else {
+            print ("no keyword")
+            filteredProductos = productos
             filtering = false
         }
         
         self.collectionView!.reloadData()
         
+        print(filteredProductos)
+        
         if (self.filteredProductos.isEmpty) {
+            print("empty")
             self.mensajeView?.isHidden = false
         }
         else {
+            print("not empty")
             self.mensajeView?.isHidden = true
         }
     }

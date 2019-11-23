@@ -12,13 +12,12 @@ import MapKit
 
 extension ProductosController {
     
-    
-    //Filter
+    //Filtrar
     func filterContentForSearchText(talla:String, estados:[String], distancia:Int) {
         
         let buscar_productos = productos
         
-        //Primero filtro
+        //Filtrar por estado
         var filtroEstadoProductos = buscar_productos
         if (!estados.isEmpty){
             filtroEstadoProductos = buscar_productos.filter(
@@ -32,13 +31,12 @@ extension ProductosController {
                                 match = true
                             }
                         }
-                        
                     }
                     return match
             })
         }
         
-        //Segundo filtro
+        //Filtrar por talla
         var filtroTallaProductos = filtroEstadoProductos
         if (!talla.isEmpty){
             filtroTallaProductos = filtroEstadoProductos.filter(
@@ -52,9 +50,7 @@ extension ProductosController {
             })
         }
         
-        
-        //Tercer filtro
-        print (distancia)
+        /* Filtrar por distancia */
         let distancia_busqueda = distancia
         var currentLocation:CLLocation?
         
@@ -81,6 +77,7 @@ extension ProductosController {
                         
                         let distance_km = distance/1000
                         
+                        //La distancia tiene que ser menor a la introducida
                         if (Int(distance_km) < distancia_busqueda) {
                             match = true
                         }
@@ -127,7 +124,7 @@ extension ProductosController {
     }
     
     @IBAction func abrirFiltros(){
-        //Detail Producto Controller
+        //Mostrar la pantalla de filtros
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let filtrosController = storyboard.instantiateViewController(withIdentifier: "filtrosController") as! FiltrosController
         filtrosController.devolverFiltros = self.devolverFiltros

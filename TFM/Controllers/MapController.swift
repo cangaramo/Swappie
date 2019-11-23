@@ -51,12 +51,12 @@ class MapController: UIViewController {
         switch CLLocationManager.authorizationStatus() {
         case .authorizedWhenInUse:
             mapView!.showsUserLocation = true
-        case .denied: // Show alert telling users how to turn on permissions
+        case .denied: 
             break
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
             mapView!.showsUserLocation = true
-        case .restricted: // Show an alert letting them know what’s up
+        case .restricted:
             break
         case .authorizedAlways:
             break

@@ -20,7 +20,7 @@ extension EditarPerfilController: UIImagePickerControllerDelegate, UINavigationC
     
     @objc func seleccionarFoto(sender:UIGestureRecognizer){
         
-        //Open image picker
+        //Abrir image picker
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.allowsEditing = true
@@ -30,12 +30,11 @@ extension EditarPerfilController: UIImagePickerControllerDelegate, UINavigationC
     //Recoger imagen seleccionada
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        // Local variable inserted by Swift 4.2 migrator.
         let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         
         var selectedImageFromPicker: UIImage?
         
-        //Edited
+        //Editada
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             selectedImageFromPicker = editedImage
         }
@@ -44,7 +43,6 @@ extension EditarPerfilController: UIImagePickerControllerDelegate, UINavigationC
             selectedImageFromPicker = originalImage
         }
         
-        //Set in image View
         if let selectedImage = selectedImageFromPicker {
            avatarImageView!.image = selectedImage
         }
@@ -54,7 +52,7 @@ extension EditarPerfilController: UIImagePickerControllerDelegate, UINavigationC
     
 }
 
-// Helper function inserted by Swift 4.2 migrator.
+// Helper function
 fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
     return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }

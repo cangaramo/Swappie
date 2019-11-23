@@ -13,7 +13,7 @@ import AlamofireImage
 import Firebase
 import MapKit
 
-class DetailProductoController: UIViewController, MKMapViewDelegate {
+class DetailProductoController: UIViewController {
     
     //Views
     @IBOutlet var slideshow: ImageSlideshow!
@@ -55,41 +55,19 @@ class DetailProductoController: UIViewController, MKMapViewDelegate {
         
         super.viewDidLoad()
         
-        /* Slideshow */
+        // Slideshow
         configurarSlideshow()
         
-        /* Producto */
+        // Producto
         tituloLabel.text = producto?.titulo
         tallaLabel.text = "‧  Talla " + producto!.talla!
         marcaLabel.text = producto?.marca
         descripcionLabel.text = producto?.descripcion
                 
-        /* Usuario */
+        // Usuario
         let usuario_id = producto?.usuario
         
-        Database.database().reference().child("usuarios").child(usuario_id!)
-            .observeSingleEvent(
-                of: .value,
-                with: {
-                    (snapshot) in
-                    
-                    if let dictionary = snapshot.value as? [String: AnyObject] {
-                        self.productoUsuario = Usuario(dictionary: dictionary)
-                        self.productoUsuario!.id = snapshot.key
-                        self.usuarioLabel.text = self.productoUsuario!.nombre
-                        
-                        if (self.productoUsuario!.imagen != "") {
-                            self.avatarImageView.loadImageUsingCacheWithUrlString(self.productoUsuario!.imagen!)
-                        }
-                        else {
-                            self.avatarImageView.image = UIImage(named:"avatar")
-                        }
-                        
-                    }
-                    
-            },
-                withCancel: nil
-        )
+        mostrarDatosUsuarios(usuario_id: usuario_id!)
                 
         //Ocultar boton si es usuario actual
         let current_user_id =  Auth.auth().currentUser?.uid
@@ -97,7 +75,8 @@ class DetailProductoController: UIViewController, MKMapViewDelegate {
             intercambiarButton.isHidden = true
             borrarButton?.isEnabled = true
         }
-        // Ocultar boton si ya se ha hecho un intercambio con ese usuario */
+            
+        //Ocultar boton si ya se ha hecho un intercambio con ese usuario 
         else {
             
             borrarButton?.isEnabled = false
@@ -117,77 +96,43 @@ class DetailProductoController: UIViewController, MKMapViewDelegate {
             })
         }
         
-        /* Ir a Perfil de usuario */
+        // Ir a Perfil de usuario
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         perfilView.addGestureRecognizer(tap)
         
-        /* Mostrar mapa */
+        // Mostrar mapa
         showMap()
         let tap2 = UITapGestureRecognizer(target: self, action: #selector(self.mapaTapped))
         mapView!.addGestureRecognizer(tap2)
         mapView!.delegate = self
     }
     
-    /*Ir a mapa */
-    @objc func mapaTapped(){
+    func mostrarDatosUsuarios(usuario_id:String){
         
-        if (producto!.latitud != "" && producto!.longitud != "" ){
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let mapController = storyboard.instantiateViewController(withIdentifier: "mapController") as! MapController
-            mapController.producto_latitud = Double(producto!.latitud!)
-            mapController.producto_longitud = Double(producto!.longitud!)
-            navigationController?.pushViewController(mapController,animated: true)
-        }
-        
-    }
-
-    /* MAPA - Crear pin customizado */
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard !(annotation is MKUserLocation) else {
-            return nil
-        }
-        
-        let annotationIdentifier = "AnnotationIdentifier"
-        
-        var annotationView: MKAnnotationView?
-        if let dequeuedAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier) {
-            annotationView = dequeuedAnnotationView
-            annotationView?.annotation = annotation
-        }
-        else {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
-            annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-        }
-        
-        if let annotationView = annotationView {
-            annotationView.canShowCallout = true
-            annotationView.image = UIImage(named: "marker40")
-        }
-        
-        return annotationView
+        Database.database().reference().child("usuarios").child(usuario_id)
+            .observeSingleEvent(
+                of: .value,
+                with: {
+                    (snapshot) in
+                    
+                    if let dictionary = snapshot.value as? [String: AnyObject] {
+                        self.productoUsuario = Usuario(dictionary: dictionary)
+                        self.productoUsuario!.id = snapshot.key
+                        self.usuarioLabel.text = self.productoUsuario!.nombre
+                        
+                        if (self.productoUsuario!.imagen != "") {
+                            self.avatarImageView.loadImageUsingCacheWithUrlString(self.productoUsuario!.imagen!)
+                        }
+                        else {
+                            self.avatarImageView.image = UIImage(named:"avatar")
+                        }
+                    }
+                    
+            },
+                withCancel: nil
+        )
     }
     
-    /* Mostrar mapa - Mostrar ubicacion del producto */
-    func showMap (){
-        if (producto!.latitud != "" && producto!.longitud != "" ){
-        
-            let loc_lat = Double(producto!.latitud!)
-            let loc_long = Double(producto!.longitud!)
-            let location = CLLocationCoordinate2D(latitude: loc_lat!,
-                                                  longitude: loc_long!)
-            
-            let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-            let region = MKCoordinateRegion(center: location, span: span)
-            mapView!.setRegion(region, animated: true)
-            
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = location
-            annotation.title = "Big Ben"
-            annotation.subtitle = "London"
-            mapView!.addAnnotation(annotation)
-        }
-        
-    }
     
     /* SLIDESHOW */
     func configurarSlideshow(){
@@ -204,8 +149,13 @@ class DetailProductoController: UIViewController, MKMapViewDelegate {
         //Añadir imagenes
         slideshow.setImageInputs(alamofireSource)
         
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(DetailProductoController.didTap))
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(DetailProductoController.didTapSlideShow))
         slideshow.addGestureRecognizer(recognizer)
+    }
+    
+    @objc func didTapSlideShow() {
+        let fullScreenController = slideshow.presentFullScreenController(from: self)
+        fullScreenController.slideshow.activityIndicator = DefaultActivityIndicator(style: .white, color: nil)
     }
     
     //Ver Perfil del Usuario
@@ -216,49 +166,32 @@ class DetailProductoController: UIViewController, MKMapViewDelegate {
         navigationController?.pushViewController(usuarioController,animated: true)
     }
     
-    //Ir a Mapa Controller
-    /*
-    @IBAction func verMapa(){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let mapController = storyboard.instantiateViewController(withIdentifier: "mapController") as! MapController
-        navigationController?.pushViewController(mapController,animated: true)
-    }*/
-    
-    @objc func didTap() {
-        let fullScreenController = slideshow.presentFullScreenController(from: self)
-        fullScreenController.slideshow.activityIndicator = DefaultActivityIndicator(style: .white, color: nil)
-    }
-    
     /* Borrar producto */
     @IBAction func borrarProducto(){
         let producto_id = producto?.id
         
-        //Borrar de USUARIO-PRODUCTOS
+        //Borrar de Usuario-Productos
         let usuario_id = productoUsuario!.id
         let ref_user_prod = Database.database().reference().child("usuario-productos")
         ref_user_prod.child(usuario_id!).child(producto_id!).setValue(nil){
             (error:Error?, ref:DatabaseReference) in
             if let error = error {
-                print("Data could not be saved: \(error).")
+                print("Error: \(error).")
             } else {
-                print("Data saved successfully!")
                 
-                //Borrar de PRODUCTOS
+                //Borrar de Producto
                 let ref_productos = Database.database().reference().child("productos")
                 ref_productos.child(producto_id!).setValue(nil){
                     (error:Error?, ref:DatabaseReference) in
                     if let error = error {
-                        print("Data could not be saved: \(error).")
+                        print("Error: \(error).")
                     } else {
-                        print("Data saved successfully!")
                         self.navigationController?.popToRootViewController(animated: true)
                     }
                 }
             }
         }
-
     }
-    
     
     /* Intercambiar y Mostrar intercambio */
     @IBAction func intercambiar(){
@@ -284,22 +217,19 @@ class DetailProductoController: UIViewController, MKMapViewDelegate {
             let userProductsRef2 = intercambioRef.child(usuario2)
             userProductsRef2.child(producto_ref!).setValue(1)
             
-            /* USUARIO INTERCAMBIO */
+            //Añadir intercambio a BD
             let refUsuarioIntercambio = Database.database().reference().child("usuarios-intercambios")
             let refInter1 = refUsuarioIntercambio.child(usuario1).child(intercambioRef.key!)
-            //refInter1.setValue(usuario2)
             refInter1.child("con_usuario").setValue(usuario2)
             refInter1.child("estado").setValue("Esperando")
             
             let refInter2 = refUsuarioIntercambio.child(usuario2).child(intercambioRef.key!)
-            //refInter2.setValue(usuario1)
             refInter2.child("con_usuario").setValue(usuario1)
             refInter2.child("estado").setValue("Pendiente")
             
-            /* IR A INTERCAMBIO */
+            //Ir a intercambio
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let intercambioController = storyboard.instantiateViewController(withIdentifier: "intercambioController") as! DetailIntercambioController
-            //intercambioController.usuario = productoUsuario
             intercambioController.usuario_other = productoUsuario!.id
             intercambioController.intercambioId = intercambioRef.key
             navigationController?.pushViewController(intercambioController,animated: true)
@@ -316,7 +246,6 @@ class DetailProductoController: UIViewController, MKMapViewDelegate {
             
             navigationController?.pushViewController(detailIntercambioController,animated: true)
         }
-        
         
     }
     

@@ -17,11 +17,11 @@ class PerfilHeder: UICollectionReusableView {
     @IBOutlet var descripcionLabel:UILabel?
     @IBOutlet var perfilView:UIView?
     @IBOutlet var numeroProductos:UILabel?
+    @IBOutlet var ubicacionIcono:UIImageView?
     
     var usuario:Usuario? {
         
         didSet{
-            
             
             if (usuario!.imagen != "") {
                 self.perfilImageView?.loadImageUsingCacheWithUrlString(usuario!.imagen!)
@@ -29,21 +29,32 @@ class PerfilHeder: UICollectionReusableView {
             if (usuario!.nombre != "") {
                 self.nombreLabel!.text = usuario?.nombre
             }
+            
+            //Ubicacion
             if (usuario!.ubicacion != "") {
+                self.ubicacionIcono?.isHidden = false
+                self.ubicacionLabel!.isHidden = false
                 self.ubicacionLabel!.text = usuario!.ubicacion
             }
+            else {
+                self.ubicacionIcono?.isHidden = true
+                self.ubicacionLabel!.isHidden = true
+            }
+            
+            //Descripcion
             if (usuario!.descripcion != "") {
+                self.descripcionLabel?.isHidden = false
                 self.descripcionLabel!.text = usuario!.descripcion
-                print (usuario!.descripcion)
+            }
+            else {
+                self.descripcionLabel?.isHidden = true
             }
         }
     }
     
   
     func getHeaderHeight() -> CGFloat{
-        
         let labelHeight = descripcionLabel?.frame.height
-                
         let headerHeight = CGFloat (180 + labelHeight!)
         print (headerHeight)
         return headerHeight

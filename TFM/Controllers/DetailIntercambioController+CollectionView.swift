@@ -59,16 +59,13 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     }
     
     @objc func verSuPerfil(_ sender: UITapGestureRecognizer) {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let usuarioController = storyboard.instantiateViewController(withIdentifier: "usuarioController") as! UsuarioController
         usuarioController.usuario = usuario_other_full
         navigationController?.pushViewController(usuarioController,animated: true)
-        
     }
     
     @objc func verMiPerfil(_ sender: UITapGestureRecognizer) {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let usuarioController = storyboard.instantiateViewController(withIdentifier: "usuarioController") as! UsuarioController
         usuarioController.usuario = usuario_self_full
@@ -94,7 +91,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
             cell.producto = producto
             return cell
         }
-            
         else {
             let producto = productos_self[indexPath.item]
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId4", for: indexPath) as! ProductoCell
@@ -108,7 +104,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
         }
         
     }
-    
     
     @objc func handleReloadTable () {
         DispatchQueue.main.async(execute: {

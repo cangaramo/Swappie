@@ -14,7 +14,7 @@ import MapKit
 
 class ProductosController: UIViewController {
     
-    //Esto acaso lo uso?
+    //Collection View
     @IBOutlet var collectionView:UICollectionView?
     private let itemsPerRow: CGFloat = 2
     private let sectionInsets = UIEdgeInsets(top: 50.0,
@@ -40,7 +40,7 @@ class ProductosController: UIViewController {
     //Filtros
     var talla_seccionada = ""
     var estados_seleccionados = [String]()
-    var distancia_seleccionada = 20
+    var distancia_seleccionada = 100
     
     let locationManager = CLLocationManager()
     var latitud_usuario = ""
@@ -72,11 +72,15 @@ class ProductosController: UIViewController {
         }
         
         self.hideKeyboardWhenTappedAround()
-        
     }
     
-    
     func obtenerProductos() {
+        
+        print (categoria_seleccionada)
+
+        
+        var hayProductos = false
+        
         Database.database().reference().child("productos")
             .observe(.childAdded, with: { (snapshot) in
                 
@@ -88,20 +92,28 @@ class ProductosController: UIViewController {
                     //Mostrar solo los que pertenecen a esa categoria
                     if (producto.genero == self.genero_seleccionado){
                         if (producto.categoria == self.categoria_seleccionada || self.categoria_seleccionada == "_todo") {
+            
+                            hayProductos = true
                             self.productos.append(producto)
                             
-                            //Background thread
+                            //Configurar timer
                             self.timer?.invalidate()
-                            print("we just canceled our timer")
-                            
-                            self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-                            print("schedule a table reload in 0.1 sec")
+                            self.timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
                         }
                     }
-                    
-                    self.handleReloadTable()
-                    
                 }
+                
+                DispatchQueue.main.async(execute: {
+                    //print ("fin")
+                    if (self.productos.isEmpty) {
+                       print ("empty)")
+                        self.mensajeView?.isHidden = false
+                    }
+                    else {
+                        print("not empty")
+                    }
+                })
+                
                 
             }, withCancel: nil)
     }
@@ -109,13 +121,13 @@ class ProductosController: UIViewController {
     var timer: Timer?
     
     @objc func handleReloadTable () {
+        //Hilo principal
         DispatchQueue.main.async(execute: {
             self.collectionView!.reloadData()
-            
             if (self.productos.isEmpty) {
                 self.mensajeView?.isHidden = false
             }
-            
+
         })
     }
     

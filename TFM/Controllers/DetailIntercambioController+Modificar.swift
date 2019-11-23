@@ -37,7 +37,6 @@ extension DetailIntercambioController {
         cambioRealizado()
     }
     
-    
     //Productos a anyadir
     func productosAnyadir(productos_seleccionados: [Producto]){
         for producto_seleccionado in productos_seleccionados{

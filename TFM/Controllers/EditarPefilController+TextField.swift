@@ -25,7 +25,6 @@ extension EditarPerfilController:  UITextViewDelegate, UITextFieldDelegate {
         addBorder(textField: textField, border_color: border_color)
         
         self.animateTextField(textField: textField, up:false)
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -37,10 +36,8 @@ extension EditarPerfilController:  UITextViewDelegate, UITextFieldDelegate {
             nextView.becomeFirstResponder()
         }
         else {
-            // Not found, so remove keyboard.
             textField.resignFirstResponder()
         }
-        // Do not add a line break
         return false
     }
     
@@ -72,7 +69,7 @@ extension EditarPerfilController:  UITextViewDelegate, UITextFieldDelegate {
         self.animateTextField(textField: textView, up:false)
     }
     
-    /* Métodos */
+    /* Animar text field y añadir bordes */
     
     func animateTextField(textField: UIView, up: Bool)
     {

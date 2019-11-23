@@ -13,7 +13,6 @@ import UIKit
 extension UsuarioController:
 UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDelegate{
     
-    
     /* Collection view */
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -34,7 +33,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDele
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        
         collectionView!.collectionViewLayout.invalidateLayout()
     }
     
@@ -49,7 +47,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDele
         headerHeight = header.getHeaderHeight()
         self.view.layoutIfNeeded()
         header.layoutIfNeeded()
-        
         
         //Total productos
         let total = productos.count
@@ -119,7 +116,6 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIScrollViewDele
     }
 
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView){
-    //func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
        let hide = scrollView.contentOffset.y > self.lastOffsetY
         

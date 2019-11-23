@@ -12,25 +12,19 @@ import Firebase
 
 class CategoriasController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var firstArray = ["Vaqueros", "Camisetas", "Sudaderas"]
-    var secondArray = ["Camisetas", "Pantalones", "Faldas", "Zapatos", "Accesorios", "Vestidos"]
-    
     var categoriasMujer = [Categoria]()
     var categoriasHombre = [Categoria]()
     
     var segmentedControlIndex = 0
     
     @IBOutlet var tableView: UITableView?
-  //  @IBOutlet var segmentedControl: UISegmentedControl?
     
     @IBOutlet weak var interfaceSegmented: CustomSegmentedControl!{
         didSet{
             interfaceSegmented.setButtonTitles(buttonTitles: ["Mujer","Hombre"])
             interfaceSegmented.selectorViewColor = UIColor(rgb: 0x5446d9)
             interfaceSegmented.selectorTextColor = UIColor(rgb: 0x5446d9)
-
-            interfaceSegmented.Test = self.Test
-
+            interfaceSegmented.CambiarSegmento = self.cambiarSegmento
         }
     }
     
@@ -44,45 +38,33 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         
+        //Obtener categorias
         observeCategoriasMujer()
         observeCategoriasHombre()
-        
-        /*
-         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-         self.navigationController?.navigationBar.shadowImage = UIImage()
-         self.navigationController?.navigationBar.isTranslucent = true */
-        //self.navigationController?.navigationBar.backgroundColor = UIColor.white
     }
     
     //Categorias hombre
     func observeCategoriasHombre() {
         
-        //Buscamos ese usuario en Categorias mujer
         let ref = Database.database().reference().child("categorias").child("hombre")
         
-        //Loop mensaje
         ref.observe(.childAdded, with: { (snapshot) in
             
-            //Cogemos la categoria
             let categoriaId = snapshot.key
-            
-            //Y ahora vamos a MESSAGES
             let categoriasReference = ref.child(categoriaId)
             
-            //Single
             categoriasReference.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let categoria = Categoria(dictionary: dictionary)
+                     categoria.categoriaID = categoriaId
                     
+                    //Añadir a array categorias Hombre
                     self.categoriasHombre.append(categoria)
                     
+                    //Configurar timer
                     self.timer?.invalidate()
-                    print("we just canceled our timer")
-                    
                     self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-                    print("schedule a table reload in 0.1 sec")
-                    
                 }
                 
             }, withCancel: nil)
@@ -93,32 +75,25 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
     //Categorias mujer
     func observeCategoriasMujer() {
         
-        //Buscamos ese usuario en Categorias mujer
         let ref = Database.database().reference().child("categorias").child("mujer")
         
-        //Loop mensaje
         ref.observe(.childAdded, with: { (snapshot) in
             
-            //Cogemos la categoria
             let categoriaId = snapshot.key
-
-            //Y ahora vamos a MESSAGES
             let categoriasReference = ref.child(categoriaId)
             
-            //Single
             categoriasReference.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let categoria = Categoria(dictionary: dictionary)
                     categoria.categoriaID = categoriaId
                     
+                    //Añadir a array categorias Mujer
                     self.categoriasMujer.append(categoria)
     
+                    //Configurar timer
                     self.timer?.invalidate()
-                    print("we just canceled our timer")
-                    
                     self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-                    print("schedule a table reload in 0.1 sec")
                     
                 }
                 
@@ -128,28 +103,24 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
     }
     
     var timer: Timer?
-    
     @objc func handleReloadTable() {
-        //this will crash because of background thread, so lets call this on dispatch_async main thread
+        //Llamar a la funcion en el hilo principal
         DispatchQueue.main.async(execute: {
-            print("we reloaded the table")
-           // print (self.messages)
             self.tableView?.reloadData()
         })
     }
     
-    @objc func hasChanged(){
-        print ("has changed")
-    }
-    
-    func Test(){
+
+    //Actualizar tabla con el genero correspondiente
+    func cambiarSegmento(){
         segmentedControlIndex = interfaceSegmented.selectedIndex
         tableView?.reloadData()
     }
     
     
+    /* Table view */
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //if (segmentedControl?.selectedSegmentIndex == 1) {
         if (segmentedControlIndex == 0){
             return categoriasMujer.count
         }
@@ -180,16 +151,21 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         
         //Obtener genero
         var genero = ""
+        var categoria_id = ""
+        
         if (segmentedControlIndex == 0){
             genero = "mujer"
+            //Obtener categoria
+            let categoria = categoriasMujer[indexPath.row]
+            categoria_id = categoria.categoriaID!
         }
         else {
             genero = "hombre"
+            //Obtener categoria
+            let categoria = categoriasHombre[indexPath.row]
+            categoria_id = categoria.categoriaID!
         }
         
-        //Obtener categoria
-        let categoria = categoriasMujer[indexPath.row]
-        let categoria_id = categoria.categoriaID
         
         //Ir a productos
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -199,8 +175,5 @@ class CategoriasController: UIViewController, UITableViewDataSource, UITableView
         self.navigationController?.pushViewController(productosController, animated: true)
     }
     
-    @IBAction func changed(){
-        tableView?.reloadData()
-    }
     
 }

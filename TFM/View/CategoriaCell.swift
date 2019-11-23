@@ -18,7 +18,6 @@ class CategoriaCell: UITableViewCell {
         
         didSet {
             
-            //Message details
             self.categoriaTextLabel?.text = categoria?.nombre
             
             if let imagen = categoria!.imagen {

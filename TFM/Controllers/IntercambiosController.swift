@@ -15,9 +15,12 @@ class IntercambiosController:UIViewController, UITableViewDelegate, UITableViewD
     var intercambios = [Intercambio]()
     
     @IBOutlet var tableView: UITableView?
+    @IBOutlet var mensajeView:UIView?
     
     override func viewDidLoad() {
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        
+        mensajeView?.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -29,23 +32,42 @@ class IntercambiosController:UIViewController, UITableViewDelegate, UITableViewD
         
         intercambios = [Intercambio]()
         let usuario_actual = Auth.auth().currentUser!.uid
-        let refIntercambio = Database.database().reference().child("usuarios-intercambios").child(usuario_actual)
         
-        refIntercambio.observe(.childAdded, with: { (snapshot) in
-            
-            let intercambio_id = snapshot.key
-            let intercambio_values = snapshot.value as! [AnyHashable : Any]
-            
-            let intercambio = Intercambio(dictionary: intercambio_values)
-            intercambio.id = intercambio_id
+        let refIntercambios = Database.database().reference().child("usuarios-intercambios")
         
-            self.intercambios.append(intercambio)
+        refIntercambios.observeSingleEvent(of: .value, with: { (snapshot) in
             
-            DispatchQueue.main.async(execute: {
-                self.tableView!.reloadData()
-            })
+            //El usuario tiene intercambios
+            if (snapshot.hasChild(usuario_actual)) {
+                
+                let refIntercambioUsuario = Database.database().reference().child("usuarios-intercambios").child(usuario_actual)
+                
+                refIntercambioUsuario.observe(.childAdded, with: { (snapshot) in
+                    
+                    let intercambio_id = snapshot.key
+                    let intercambio_values = snapshot.value as! [AnyHashable : Any]
+                    
+                    let intercambio = Intercambio(dictionary: intercambio_values)
+                    intercambio.id = intercambio_id
+                    
+                    self.intercambios.append(intercambio)
+         
+                    //Configurar timer
+                    self.timer?.invalidate()
+                    self.timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+                    
+                }, withCancel: nil)
+            }
+            
+            //El usuario no tiene intercambios
+            else {
+                if (self.intercambios.isEmpty) {
+                    self.mensajeView?.isHidden = false
+                }
+            }
             
         }, withCancel: nil)
+    
         
     }
     
@@ -59,6 +81,7 @@ class IntercambiosController:UIViewController, UITableViewDelegate, UITableViewD
         let intercambio = intercambios[indexPath.item]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId5", for: indexPath) as! IntercambioCell
         cell.intercambio = intercambio
+        
         return cell
     }
     
@@ -76,6 +99,16 @@ class IntercambiosController:UIViewController, UITableViewDelegate, UITableViewD
         detailIntercambioController.intercambioId = intercambio.id
         
          navigationController?.pushViewController(detailIntercambioController,animated: true)
+    }
+    
+    
+    var timer: Timer?
+    
+    @objc func handleReloadTable () {
+        //Hilo principal
+        DispatchQueue.main.async(execute: {
+            self.tableView!.reloadData()
+        })
     }
     
 }

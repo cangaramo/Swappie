@@ -12,7 +12,7 @@ import Firebase
 import MapKit
 import CoreLocation
 
-class SubirProductoController: UIViewController, CLLocationManagerDelegate {
+class SubirProductoController: UIViewController {
     
     @IBOutlet var tituloTextField:UITextField?
     @IBOutlet var descripcionTexView:UITextView?
@@ -43,6 +43,8 @@ class SubirProductoController: UIViewController, CLLocationManagerDelegate {
     var latitud_producto = ""
     var longitud_producto = ""
     
+    var subiendoProducto = false
+    
     var timer: Timer?
 
     
@@ -64,6 +66,7 @@ class SubirProductoController: UIViewController, CLLocationManagerDelegate {
         descripcionTexView?.text = "Añade una descripción"
         descripcionTexView!.textColor = UIColor.lightGray
         
+        //Text fields
         tituloTextField?.delegate = self
         marcaTextField?.delegate = self
         tallaTextField?.delegate = self
@@ -85,6 +88,21 @@ class SubirProductoController: UIViewController, CLLocationManagerDelegate {
         addBorder(textField: estadoTextField!, border_color: border_color)
         addBorder(textField: descripcionContainer!, border_color: border_color)
         
+        //Toolbar        
+        let cerrarToolbar = UIToolbar(frame:CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+        cerrarToolbar.barStyle = .default
+        cerrarToolbar.tintColor = UIColor(rgb:0x0f45b55)
+        cerrarToolbar.barTintColor = UIColor.white
+        cerrarToolbar.items = [
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(title: "Hecho", style: .plain, target: self, action: #selector(esconderKeyboard))]
+        cerrarToolbar.sizeToFit()
+        
+        tituloTextField!.inputAccessoryView = cerrarToolbar
+        descripcionTexView!.inputAccessoryView = cerrarToolbar
+        marcaTextField!.inputAccessoryView = cerrarToolbar
+        categoriaTextField!.inputAccessoryView = cerrarToolbar
+        
         // Localizacion
         checkLocationServices()
         if CLLocationManager.locationServicesEnabled() {
@@ -93,54 +111,17 @@ class SubirProductoController: UIViewController, CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
         }
         
-        // Subir producto
+        // Acction subir producto
+        subirProductoButton?.setBackgroundColor(color: UIColor(rgb: 0x5446D9), forState: UIControl.State.highlighted)
+        subirProductoButton?.setBackgroundColor(color: UIColor(rgb: 0x5446D9), forState: UIControl.State.focused)
         subirProductoButton!.addTarget(self, action: #selector(subirProducto), for: .touchUpInside)
+    }
+    
+  
+    @objc func esconderKeyboard() {
+        view.endEditing(true)
 
     }
-    
-    /* LOCALIZACION */
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        
-        latitud_producto = String(locValue.latitude)
-        longitud_producto = String(locValue.longitude)
-    }
-    
-    func checkLocationServices() {
-        if CLLocationManager.locationServicesEnabled() {
-            checkLocationAuthorization()
-        }
-    }
-    
-    func checkLocationAuthorization() {
-        switch CLLocationManager.authorizationStatus() {
-            case .authorizedWhenInUse:
-                break
-            case .denied:
-                //Mostrar alerta para activar permisos
-                subirProductoButton?.isEnabled = false
-                subirProductoButton?.backgroundColor = UIColor(rgb:0xC9CCD1)
-                mostrarMensaje()
-                break
-            case .notDetermined:
-                locationManager.requestWhenInUseAuthorization()
-                locationManager.requestAlwaysAuthorization()
-            case .restricted: // Show an alert letting them know what’s up
-                break
-            case .authorizedAlways:
-                break
-        }
-        
-    }
-    
-    func mostrarMensaje(){
-        let alertController = UIAlertController(title: "Es necesario activar permisos de Localización", message:
-            "Se necesitan permisos de Localización para publicar un producto", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Aceptar", style: .default))
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     
     /* CATEGORIAS*/
     

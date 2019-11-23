@@ -11,8 +11,7 @@ import UIKit
 
 extension RegistroController: UITextFieldDelegate {
     
-    
-    /* Text Field */
+    /* Text Fields */
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
@@ -27,6 +26,7 @@ extension RegistroController: UITextFieldDelegate {
         self.animateTextField(textField: textField, up:false)
     }
     
+    //Pasar al siguiente TextField cuando se presiona return
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         switch (textField.tag){
@@ -38,16 +38,17 @@ extension RegistroController: UITextFieldDelegate {
             break
         case 3:
             textField.resignFirstResponder()
+            registrarUsuario()
             break
         default:
             textField.resignFirstResponder()
         }
         
-        // Do not add a line break
+        //No añadir salto de línea
         return false
     }
     
-    /* Métodos */
+    //Animar text field cuando se muestra el teclado
     func animateTextField(textField: UIView, up: Bool)
     {
         let movementDistance:CGFloat = -100
@@ -69,6 +70,7 @@ extension RegistroController: UITextFieldDelegate {
         UIView.commitAnimations()
     }
     
+    //Añadir borde cuando text field esté activo
     func addBorder(textField: UIView, border_color: UIColor){
         let width = CGFloat(1.0)
         let border = CALayer()

@@ -16,7 +16,6 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         /*  Configurar picker */
         uiPicker = UIPickerView(frame: CGRect(x: 0, y: 200, width: view.frame.width, height: 300))
        uiPicker.backgroundColor = UIColor(rgb:0xf5f5f5)
-        //uiPicker.backgroundColor = UIColor.white
         
         uiPicker.showsSelectionIndicator = true
         uiPicker.delegate = self
@@ -43,7 +42,6 @@ extension SubirProductoController: UIPickerViewDataSource, UIPickerViewDelegate 
         
         estadoTextField!.inputView = uiPicker
         estadoTextField!.inputAccessoryView = toolBar
-        
     }
     
     

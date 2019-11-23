@@ -58,7 +58,7 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
         
         var height: CGFloat = 80
         
-        //obtener altura
+        //Obtener altura
         if let text = mensajes[indexPath.item].texto {
             height = estimateFrameForText(text).height + 20
         }
@@ -73,13 +73,13 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     }
 }
 
-// Helper function inserted by Swift 4.2 migrator.
+// Helper function
 fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
     guard let input = input else { return nil }
     return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }
 
-// Helper function inserted by Swift 4.2 migrator.
+// Helper function
 fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
     return input.rawValue
 }

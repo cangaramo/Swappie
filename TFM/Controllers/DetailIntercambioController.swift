@@ -105,7 +105,6 @@ class DetailIntercambioController: UIViewController {
             let producto_id = snapshot.key
             let productoReference = Database.database().reference().child("productos").child(producto_id)
             
-            //Single
             productoReference.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -115,13 +114,9 @@ class DetailIntercambioController: UIViewController {
                     
                     self.productos_other.append(productoReal)
                     
-                    //Background thread
-                    
+                    //Configurar timer
                     self.timer2?.invalidate()
-                    print("we just canceled our timer")
-                    
                     self.timer2 = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.seeProductosOther), userInfo: nil, repeats: false)
-                    print("schedule a table reload in 0.1 sec")
                     
                 }
                 
@@ -158,7 +153,6 @@ class DetailIntercambioController: UIViewController {
             let producto_id = snapshot.key
             let productoReference = Database.database().reference().child("productos").child(producto_id)
             
-            //Single
             productoReference.observeSingleEvent(of: .value, with: { (snapshot) in
             
                 if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -168,13 +162,9 @@ class DetailIntercambioController: UIViewController {
                     
                     self.productos_self.append(productoReal)
                     
-                    //Background thread
-                    
+                    //Configurar timer
                     self.timer?.invalidate()
-                    print("we just canceled our timer")
-                    
                     self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.seeProductosSelf), userInfo: nil, repeats: false)
-                    print("schedule a table reload in 0.1 sec")
                     
                 }
                 
@@ -214,13 +204,13 @@ class DetailIntercambioController: UIViewController {
             /* Otro usuario */
             let usuarioOtherRef = refIntercambio.child(self.usuario_other!)
             
-            //Remove old values
+            //Quitar los productos viejos
             for producto_viejo in productos_other_viejos {
                 let producto_id = producto_viejo.id!
                 usuarioOtherRef.child(producto_id).removeValue();
             }
             
-            //Add children
+            //Añadir los productos nuevos
             for producto_nuevo in productos_other_nuevos {
                 let producto_id = producto_nuevo.id!
                 usuarioOtherRef.child(producto_id).setValue(1)
@@ -306,10 +296,6 @@ class DetailIntercambioController: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let chatController = storyboard.instantiateViewController(withIdentifier: "chatController") as! ChatController
         
-        //let usuario_chat = Usuario()
-       // usuario_chat.id = usuario_other
-        //chatController.usuario_other = usuario_chat
-        
         chatController.usuario_other = usuario_other_full
         
         
@@ -337,6 +323,7 @@ class DetailIntercambioController: UIViewController {
     
     func obtenerUsuarios(){
         
+        //Mi usuario
         Database.database().reference().child("usuarios").child(self.usuario_self!)
             .observeSingleEvent(of: .value, with: { (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -347,6 +334,7 @@ class DetailIntercambioController: UIViewController {
             withCancel: nil
         )
         
+        //El otro usuario
         Database.database().reference().child("usuarios").child(self.usuario_other!)
             .observeSingleEvent(of: .value, with: { (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -354,7 +342,7 @@ class DetailIntercambioController: UIViewController {
                     self.usuario_other_full!.id = snapshot.key
                 }
             },
-                                withCancel: nil
+            withCancel: nil
         )
     }
 }

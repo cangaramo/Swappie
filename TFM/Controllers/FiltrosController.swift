@@ -22,14 +22,11 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     
     let tallas = ["", "XXS", "XS", "S", "M", "L", "XL", "XXL"]
     var talla_seccionada = ""
-    
     let estados = ["Sin estrenar", "Apenas usado", "En muy buen estado", "Bastante usado"]
     var estados_seleccionados = [String]()
-    
     var distancia_seleccionada = 20
     
     var devolverFiltros : ( (String, [String], Int) -> Void)?
-    
     
     override func viewDidLoad() {
         
@@ -49,7 +46,6 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
                         print (index)
                         if let container_view = self.view.viewWithTag(index) as? UIView {
                             container_view.backgroundColor =  UIColor(rgb:0x5446D9)
-                          //  container_view.backgroundColor = UIColor(rgb:0x5446D9)
                         }
                     }
                     index = index + 1
@@ -58,13 +54,9 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
             }
         }
         
-        if (distancia_seleccionada != 20) {
-            print ("distancia")
-            print (distancia_seleccionada)
+        if (distancia_seleccionada != 100) {
             slider?.setValue(Float(distancia_seleccionada), animated: true)
             distanciaLabel!.text = "\(distancia_seleccionada)" + " km"
-            //distancia_seleccionada = currentValue
-            
         }
         
         setUIPicker()
@@ -101,18 +93,15 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
         if (encontrado) {
             estados_seleccionados.remove(at: pos)
             checkbox.backgroundColor = UIColor.white
-            
         }
         //Seleccionar
         else {
             estados_seleccionados.append(estado_selected)
             checkbox.backgroundColor = UIColor(rgb:0x5446D9)
         }
-        
     }
     
     /* Slider - Distancia */
-    
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         let currentValue = Int(sender.value)
         distanciaLabel!.text = "\(currentValue)" + " km"
@@ -188,16 +177,13 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        
         return tallas.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        
         return tallas[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
         tallaTextField!.text = tallas[row]
     }
     
@@ -208,7 +194,6 @@ class FiltrosController:UIViewController, UIPickerViewDataSource, UIPickerViewDe
             tallaTextField!.resignFirstResponder()
         }
     }
-    
     
     @IBAction func filtrosDone(){
         print (distancia_seleccionada)

@@ -48,7 +48,7 @@ extension SubirProductoController: UITextViewDelegate, UITextFieldDelegate {
         
         //Categorias Text Field
         if (textField.tag == 3 ) {
-            textField.resignFirstResponder()
+            self.view.endEditing(true)
             irACategorias()
         }
         else {
@@ -77,17 +77,13 @@ extension SubirProductoController: UITextViewDelegate, UITextFieldDelegate {
             marcaTextField?.becomeFirstResponder()
             break
         case 2:
-            textField.resignFirstResponder()
-            irACategorias()
-            break
-        case 3:
             tallaTextField?.becomeFirstResponder()
+        case 3:
             break
         default:
             textField.resignFirstResponder()
         }
         
-        // Do not add a line break
         return false
     }
     

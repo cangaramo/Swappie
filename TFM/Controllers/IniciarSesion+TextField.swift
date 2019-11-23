@@ -11,7 +11,39 @@ import UIKit
 
 extension IniciarSesionController: UITextFieldDelegate {
     
-    /* Métodos */
+    /* Text field */
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let border_color = UIColor(rgb: 0x5446D9)
+        addBorder(textField: textField, border_color: border_color)
+        self.animateTextField(textField: textField, up:true)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let border_color = UIColor(rgb: 0xd3d3d3)
+        addBorder(textField: textField, border_color: border_color)
+        self.animateTextField(textField: textField, up:false)
+    }
+    
+    //Pasar al siguiente TextField cuando se presiona return
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        switch (textField.tag){
+        case 1:
+            contrasenaTextField?.becomeFirstResponder()
+            break
+        case 2:
+            textField.resignFirstResponder()
+            iniciarSesion()
+            break
+        default:
+            textField.resignFirstResponder()
+        }
+        
+        return false
+    }
+    
+    //Animar text fields cuando se muestra el teclado
     func animateTextField(textField: UIView, up: Bool)
     {
         let movementDistance:CGFloat = -100
@@ -33,6 +65,7 @@ extension IniciarSesionController: UITextFieldDelegate {
         UIView.commitAnimations()
     }
     
+    //Añadir borde cuando text field esté activo
     func addBorder(textField: UIView, border_color: UIColor){
         let width = CGFloat(1.0)
         let border = CALayer()
@@ -41,37 +74,5 @@ extension IniciarSesionController: UITextFieldDelegate {
         border.borderWidth = width
         textField.layer.addSublayer(border)
         textField.layer.masksToBounds = true
-    }
-    
-    /* Text field */
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-        let border_color = UIColor(rgb: 0x5446D9)
-        addBorder(textField: textField, border_color: border_color)
-        self.animateTextField(textField: textField, up:true)
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let border_color = UIColor(rgb: 0xd3d3d3)
-        addBorder(textField: textField, border_color: border_color)
-        self.animateTextField(textField: textField, up:false)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        switch (textField.tag){
-        case 1:
-            contrasenaTextField?.becomeFirstResponder()
-            break
-        case 2:
-            textField.resignFirstResponder()
-            break
-        default:
-            textField.resignFirstResponder()
-        }
-        
-        // Do not add a line break
-        return false
     }
 }

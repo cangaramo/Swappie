@@ -16,7 +16,7 @@ extension ProductosController: CLLocationManagerDelegate {
         if CLLocationManager.locationServicesEnabled() {
             checkLocationAuthorization()
         } else {
-            // Show alert letting the user know they have to turn this on.
+            //Mostrar alerta
         }
     }
     
@@ -25,13 +25,12 @@ extension ProductosController: CLLocationManagerDelegate {
         case .authorizedWhenInUse:
             break
         case .denied:
-            //Mostrar alerta para activar permisos
             mostrarMensaje()
             break
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
             locationManager.requestAlwaysAuthorization()
-        case .restricted: // Show an alert letting them know what’s up
+        case .restricted: 
             break
         case .authorizedAlways:
             break
